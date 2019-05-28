@@ -1,0 +1,28 @@
+Package: slobr
+Title: Read and write files to a SQLite database.
+Version: 0.0.0.9000
+Authors@R: person(person("Sebastian", "Dalgarno", role = c("aut", "cre"), email = "seb@poissonconsulting.ca"))
+Description: A package to run a Shiny app to read and write files to a SQLite database as flobs. 
+A flob is a special type of BLOB type of BLOB that includes the file extension type.
+Depends: R (>= 3.5.0)
+License: MIT + file LICENSE
+Imports: 
+    shiny,
+    DBI,
+    RSQLite,
+    magrittr,
+    glue,
+    checkr,
+    err,
+    flobr,
+    dbflobr
+Suggests: 
+    testthat
+    covr,
+Remotes: 
+    poissonconsulting/checkr,
+    poissonconsulting/err,
+    poissonconsulting/flobr
+RoxygenNote: 6.1.1
+Encoding: UTF-8
+LazyData: true

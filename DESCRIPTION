@@ -12,10 +12,13 @@ Imports:
     glue,
     checkr,
     flobr,
-    dbflobr
+    dbflobr,
+    shinyutils
 Suggests: 
     testthat,
     covr
+Remotes:
+    poissonconsulting/shinyutils
 URL: https://github.com/poissonconsulting/slobr
 BugReports: https://github.com/poissonconsulting/slobr/issues
 RoxygenNote: 6.1.1

@@ -1,7 +1,9 @@
 #' @import shiny
 app_ui <- function() {
   tagList(
-    shinyutils::css_navbar(),
+    shinyutils::css_body(),
+    shinyutils::css_navbar(text_size = "15px"),
+    shinyutils::css_hide_errors(),
     navbarPage(title =  "Slobr", selected = 'Slob',
                tabPanel(title = "Slob",
                         mod_slobr_ui("ui_slobr_1")),

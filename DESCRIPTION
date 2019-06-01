@@ -13,9 +13,10 @@ Imports:
     checkr,
     flobr,
     dbflobr,
-    shinyutils
+    shinyutils,
+    DT
 Suggests: 
-    testthat,
+    testthat (>= 2.1.0),
     covr
 Remotes:
     poissonconsulting/shinyutils

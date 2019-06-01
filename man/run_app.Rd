@@ -4,7 +4,11 @@
 \alias{run_app}
 \title{Run the Shiny Application}
 \usage{
-run_app()
+run_app(path = system.file("extdata", "demo_db.sqlite", package =
+  "slobr"))
+}
+\arguments{
+\item{path}{A path to SQLite database.}
 }
 \description{
 Run the Shiny Application

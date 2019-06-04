@@ -1,38 +1,15 @@
-button <- function(col, type, row, ns, ...){
+button <- function(col, type, ext, row, ns, ...){
+  label <- glue("{type} {ext}")
+  if(type == "Empty")
+    return("< no flob available >")
   as.character(actionButton(ns(glue("{col}_{type}_{row}")), 
-                            label = type, ...))
+                            label = label, ...))
 }
 
-buttons <- function(col, type, row, ns, ...){
+buttons <- function(col, type, ext, row, ns, ...){
   col <- rep(col, length(row))
   sapply(seq_along(row), function(x){
-    button(col[x], type = type[x], row = row[x], ns = ns, ...)
+    button(col[x], type = type[x], ext = ext[x], row = row[x], ns = ns, ...)
   })
 }
-
-button_type <- function(x, mode){
-  class(x) <- c("flob", "blob")
-  tmp <- try(flobr::check_flob(x), silent = TRUE)
-
-  is_err <- inherits(tmp, "try-error")
-  if(is_err & mode == "write"){
-    return("Upload")
-  }
-  if(is_err & mode == "read"){
-    return("Empty")
-  }
-  if(!is_err & mode == "write"){
-    return("Replace")
-  }
-  "Download"
-}
-
-button_types <- function(x, mode){
-  out <- character(length(x))
-  for(i in seq_along(x)){
-    out[i] <- button_type(x[i], mode = mode)
-  }
-  out
-}
-
 

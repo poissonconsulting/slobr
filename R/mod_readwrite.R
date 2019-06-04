@@ -21,8 +21,9 @@ mod_readwrite_ui <- function(id){
       sidebarPanel(
         br(),
         radioButtons(ns("mode"), label = "Mode", 
-                     choices = c("Write", "Read"), 
-                     selected = "Read"),
+                     choices = c("Write" = "write", 
+                                 "Read" = "read"), 
+                     selected = "read"),
         uiOutput(ns("ui_table_name")),
         downloadLink(ns("downloadData"),label="")
       ),
@@ -55,7 +56,10 @@ mod_readwrite_server <- function(input, output, session){
   
   data_table <- reactive({
     req(input$table_name)
-    flob_datatable(input$table_name, pool, ns = ns)
+    req(input$mode)
+    print(input$mode)
+    flob_datatable(input$table_name, pool, 
+                   mode = input$mode, ns = ns)
   })
   
   table <- reactive({

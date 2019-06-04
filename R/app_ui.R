@@ -3,6 +3,12 @@ app_ui <- function() {
   tagList(
     shinyutils::css_body(),
     shinyutils::css_navbar(),
+    tags$head(tags$script(HTML('
+                           Shiny.addCustomMessageHandler("jsCode",
+                           function(message) {
+                           eval(message.value);
+                           });'
+    ))),
     # shinyutils::css_hide_errors(),
     navbarPage(title = "slobr", 
                selected = "Read and Write Files", 

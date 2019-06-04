@@ -28,10 +28,7 @@ mod_readwrite_ui <- function(id){
         downloadLink(ns("downloadData"),label="")
       ),
       mainPanel(
-        DT::DTOutput(ns("table")),
-        wellPanel(
-          verbatimTextOutput(ns('printMsg'))
-        )
+        DT::DTOutput(ns("table"))
       )
     )
     
@@ -57,7 +54,6 @@ mod_readwrite_server <- function(input, output, session){
   data_table <- reactive({
     req(input$table_name)
     req(input$mode)
-    print(input$mode)
     flob_datatable(input$table_name, pool, 
                    mode = input$mode, ns = ns)
   })
@@ -69,43 +65,42 @@ mod_readwrite_server <- function(input, output, session){
   
   output$table <- DT::renderDT({data_table()})
   
-  printText <- reactiveValues(brands = '')
-  # vals <- reactiveValues(data = table())
+  download_flob <- function(column_name, table_name, key, conn, ns){
+    flob <- dbflobr::read_flob(column_name, 
+                               table_name,
+                               key, 
+                               conn)
+    ext <- flobr::flob_ext(flob)
+    
+    output$downloadData <<- downloadHandler(filename = glue("flob.{ext}"),
+                                            content = function(file) flobr::unflob(flob, file))
+    id <- glue("{ns('downloadData')}")
+    jsinject <- paste0("setTimeout(function(){window.open($('#", id, "').attr('href'))}, 100);")
+    session$sendCustomMessage(type = 'jsCode', list(value = jsinject)) 
+  }
 
-  clicked <- reactiveValues()
   observeEvent(input$lastClick, {
     table <- table()
-    row <- as.numeric(strsplit(input$lastClick, "_")[[1]][5])
-    col <- strsplit(input$lastClick, "_")[[1]][4]
+    table_name <- input$table_name
+    id <- strsplit(input$lastClick, "_")[[1]]
+    col <- id[4]
+    type <- id[5]
+    row <- as.numeric(id[6])
+    
     blob_cols <- blob_column_names(table_name = input$table_name, pool)
     key <- table[row, -which(names(table) %in% blob_cols)]
-    clicked$key <- key
-    clicked$row <- row
-    clicked$col <- col
-    clicked$id <- input$lastClick
-    flob <- try(dbflobr::read_flob(column_name = col, table_name = input$table_name,
-                                                  key = key, conn = pool$fetch()), silent = TRUE)
-    if(inherits(flob, "try-error")){return(print("hi"))}
-    print(key)
-    output$downloadData <<- downloadHandler(filename = "flob.pdf",
-                                            content = function(file) flobr::unflob(flob, file))
-    jsinject <- "setTimeout(function(){window.open($('#readwrite_ui_1-downloadData').attr('href'))}, 100);"
-    session$sendCustomMessage(type = 'jsCode', list(value = jsinject)) 
-  })
-  
-  output$flob_1 <- downloadHandler(
-    filename = function(){
-      "flob.pdf"
-    },
-    content = function(con){
-      flobr::unflob(dbflobr::read_flob(column_name = clicked$col,
-                                       table_name = input$table_name,
-                                       key = clicked$key, 
-                                       conn = pool$fetch()))
+
+    if(type == "Download"){
+      return({
+        download_flob(column_name = col, 
+                      table_name = table_name,
+                      key = key, 
+                      conn = pool$fetch(), 
+                      ns = ns)
+      })
     }
-  )
-  
-  
+    
+  })
 }
     
 ## To be copied in the UI

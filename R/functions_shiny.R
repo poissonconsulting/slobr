@@ -1,9 +1,13 @@
 button <- function(col, type, ext, row, ns, ...){
-  label <- glue("{type} {ext}")
   if(type == "Empty")
-    return("< no flob available >")
-  as.character(actionButton(ns(glue("{col}_{type}_{row}")), 
-                            label = label, ...))
+    return("< no file available >")
+  
+  label <- glue("{type} {ext}")
+  onclick <- glue('Shiny.onInputChange(\"{ns(\"lastClick\")}\",  this.id)')
+  
+  as.character(actionButton(ns(glue("_{col}_{type}_{row}")), 
+                            label = label,
+                            onclick = onclick, ...))
 }
 
 buttons <- function(col, type, ext, row, ns, ...){
@@ -12,4 +16,6 @@ buttons <- function(col, type, ext, row, ns, ...){
     button(col[x], type = type[x], ext = ext[x], row = row[x], ns = ns, ...)
   })
 }
+
+
 

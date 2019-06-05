@@ -1,19 +1,14 @@
-button <- function(col, type, ext, row, ns, ...){
-  if(type == "Empty")
-    return("< no file available >")
-  
-  label <- glue("{type} {ext}")
-  onclick <- glue('Shiny.onInputChange(\"{ns(\"lastClick\")}\",  this.id)')
-  
-  as.character(actionButton(ns(glue("_{col}_{type}_{row}")), 
-                            label = label,
-                            onclick = onclick, ...))
+button <- function(col, row, ext, ns, ...){
+  # if(type == "Empty")
+  #   return("< no file available >")
+  as.character(checkboxInput(ns(glue("_checkrows_{col}_{row}")), 
+                            label = ext, value = FALSE, ...))
 }
 
-buttons <- function(col, type, ext, row, ns, ...){
+buttons <- function(col, ext, row, ns, ...){
   col <- rep(col, length(row))
   sapply(seq_along(row), function(x){
-    button(col[x], type = type[x], ext = ext[x], row = row[x], ns = ns, ...)
+    button(col[x], row = row[x], ext = ext[x], ns = ns, ...)
   })
 }
 

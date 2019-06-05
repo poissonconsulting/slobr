@@ -19,13 +19,9 @@ mod_readwrite_ui <- function(id){
     br(),
     sidebarLayout(
       sidebarPanel(
-        br(),
-        radioButtons(ns("mode"), label = "Mode", 
-                     choices = c("Write" = "write", 
-                                 "Read" = "read"), 
-                     selected = "read"),
         uiOutput(ns("ui_table_name")),
-        downloadLink(ns("downloadData"),label="")
+        downloadButton(ns("download"), label = "Download from selected"),
+        fileInput(ns("upload"), label = "Upload to selected")
       ),
       mainPanel(
         DT::DTOutput(ns("table"))
@@ -58,49 +54,23 @@ mod_readwrite_server <- function(input, output, session){
                    mode = input$mode, ns = ns)
   })
   
-  table <- reactive({
-    req(input$table_name)
-    table_read(input$table_name, pool)
+  checked <- reactive({
+    checked_ids(input = input)
   })
   
   output$table <- DT::renderDT({data_table()})
   
-  download_flob <- function(column_name, table_name, key, conn, ns){
-    flob <- dbflobr::read_flob(column_name, 
-                               table_name,
-                               key, 
-                               conn)
-    ext <- flobr::flob_ext(flob)
-    
-    output$downloadData <<- downloadHandler(filename = glue("flob.{ext}"),
-                                            content = function(file) flobr::unflob(flob, file))
-    id <- glue("{ns('downloadData')}")
-    jsinject <- paste0("setTimeout(function(){window.open($('#", id, "').attr('href'))}, 100);")
-    session$sendCustomMessage(type = 'jsCode', list(value = jsinject)) 
-  }
-
-  observeEvent(input$lastClick, {
-    table <- table()
-    table_name <- input$table_name
-    id <- strsplit(input$lastClick, "_")[[1]]
-    col <- id[4]
-    type <- id[5]
-    row <- as.numeric(id[6])
-    
-    blob_cols <- blob_column_names(table_name = input$table_name, pool)
-    key <- table[row, -which(names(table) %in% blob_cols)]
-
-    if(type == "Download"){
-      return({
-        download_flob(column_name = col, 
-                      table_name = table_name,
-                      key = key, 
-                      conn = pool$fetch(), 
-                      ns = ns)
-      })
-    }
-    
-  })
+  output$download <- downloadHandler(
+    filename = function(){
+      glue("slobr-files_{Sys.Date()}.zip")
+    },
+    content = function(path){
+      flobs <- get_flobs(checked(), input$table_name, pool$fetch())
+      files <- get_unflobs(flobs)
+      zip(path, files)
+    },
+    contentType = "application/zip"
+  )
 }
     
 ## To be copied in the UI

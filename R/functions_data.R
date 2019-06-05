@@ -25,21 +25,20 @@ flob_datatable <- function(table_name, conn, ns){
 
 flob_ext <- function(x){
   class(x) <- c("flob", "blob")
-  tmp <- try(flobr::check_flob(x), silent = TRUE)
+  y <- try(flobr::check_flob(x), silent = TRUE)
   
-  is_err <- inherits(tmp, "try-error")
-  if(is_err){
+  if(is_err(y)){
     return("< empty >")
   }
-  flobr::flob_ext(tmp)
+  flobr::flob_ext(y)
 }
 
 flob_exts <- function(x){
-  out <- character(length(x))
+  y <- character(length(x))
   for(i in seq_along(x)){
-    out[i] <- flob_ext(x[i])
+    y[i] <- flob_ext(x[i])
   }
-  out
+  y
 }
 
 checked_ids <- function(input){
@@ -75,7 +74,10 @@ get_flobs <- function(x, table_name, conn){
   lapply(key, function(x) {
     key <- x$key
     column_name <- x$column_name
-    dbflobr::read_flob(column_name, table_name, key, conn)
+    y <- try(dbflobr::read_flob(column_name, table_name, key, conn), silent = TRUE)
+    if(is_err(y))
+      return(NULL)
+    y
   }) 
 }
 

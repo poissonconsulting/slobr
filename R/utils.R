@@ -8,3 +8,7 @@ to_upper <- function(x) {
   x[!is_quoted] <- toupper(x[!is_quoted])
   x
 }
+
+is_err <- function(x) inherits(x, "try-error")
+
+rm_null <- function(x) x[lengths(x) != 0]

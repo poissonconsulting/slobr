@@ -27,7 +27,6 @@ mod_readwrite_ui <- function(id){
         DT::DTOutput(ns("table"))
       )
     )
-    
   )
 }
     
@@ -64,16 +63,11 @@ mod_readwrite_server <- function(input, output, session){
     },
     content = function(path){
       flobs <- get_flobs(checked(), input$table_name, pool$fetch())
+      flobs <- rm_null(flobs)
       files <- get_unflobs(flobs)
       zip(path, files)
     },
     contentType = "application/zip"
   )
 }
-    
-## To be copied in the UI
-# mod_readwrite_ui("readwrite_ui_1")
-    
-## To be copied in the server
-# callModule(mod_readwrite_server, "readwrite_ui_1")
  

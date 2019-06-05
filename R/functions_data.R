@@ -5,7 +5,7 @@
 # x <- table$flob
 
 
-flob_datatable <- function(table_name, conn, mode, ns){
+flob_datatable <- function(table_name, conn, ns){
   table <- table_read(table_name, conn)
   blob_cols <- blob_column_names(table_name, conn)
   

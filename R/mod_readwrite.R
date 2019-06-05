@@ -49,9 +49,7 @@ mod_readwrite_server <- function(input, output, session){
   
   data_table <- reactive({
     req(input$table_name)
-    req(input$mode)
-    flob_datatable(input$table_name, pool, 
-                   mode = input$mode, ns = ns)
+    flob_datatable(input$table_name, pool, ns = ns)
   })
   
   checked <- reactive({

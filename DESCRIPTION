@@ -14,7 +14,8 @@ Imports:
     flobr,
     dbflobr,
     shinyutils,
-    DT
+    DT,
+    bsplus
 Suggests: 
     testthat (>= 2.1.0),
     covr

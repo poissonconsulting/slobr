@@ -10,3 +10,13 @@ check_sqlite_connection <- function(x, connected = NA, x_name = substitute(x), e
     chk_fail(x_name, " must be disconnected", error = error)
   invisible(x)
 }
+
+count_space <- function(x) sapply(gregexpr(" ", x), function(y) {sum(y >= 0)})
+
+check_column_name <- function(x){
+  y <- FALSE
+  if(count_space(x) > 0)
+    y <- TRUE
+  y
+}
+

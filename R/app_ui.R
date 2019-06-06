@@ -3,6 +3,8 @@ app_ui <- function() {
   tagList(
     # shinyutils::css_body(),
     shinyutils::css_navbar(),
+    use_bs_tooltip(),
+    use_bs_popover(),
     tags$head(tags$script(HTML('
                            Shiny.addCustomMessageHandler("jsCode",
                            function(message) {

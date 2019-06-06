@@ -10,5 +10,18 @@ checkboxes <- function(col, ext, row, ns, ...){
   })
 }
 
+info_tooltip <- function(input, x){
+  input %>%
+    shinyInput_label_embed(
+      shiny_iconlink() %>%
+        bs_embed_tooltip(
+          x
+        ))
+}
+
+label_container <- function(x){
+  tags$div(tags$label(x), class = "form-group shiny-input-container")
+}
+
 
 

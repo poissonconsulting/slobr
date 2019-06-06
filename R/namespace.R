@@ -1,3 +1,3 @@
-#' @import checkr glue RSQLite shiny
-#' @importFrom shinyutils inline
+#' @import checkr glue RSQLite shiny bsplus
+#' @importFrom shinyutils inline fix_ui fix_server
 NULL

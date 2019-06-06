@@ -20,27 +20,54 @@ mod_readwrite_ui <- function(id){
     sidebarLayout(
       sidebarPanel(
         uiOutput(ns("ui_table_name")),
-        hr(),
-        tags$label("Add BLOB column"),
         br(),
-        inline(actionButton(ns("add_blob"), label = "Add")),
-        inline(textInput(ns("blob_column_name"), label = NULL, 
-                  placeholder = "new column name")),
-        hr(),
-        tags$label("Download files"),
-        helpText("Check any number of boxes in table"),
-        downloadButton(ns("download"), label = "Download"),
-        hr(),
-        tags$label("Upload file"),
-        helpText("Check one box in table"),
-        fileInput(ns("upload"), label = NULL),
-        actionButton(ns("upload"), label = "Upload", icon = icon("upload")),
-        hr(),
-        tags$label("Delete files"),
-        helpText("Check any number of boxes in table"),
-        actionButton(ns("delete"), "Delete", icon = icon("trash"))
+        actionLink("blob_link", label =  "Add new column") %>%
+          bs_attach_collapse("blob"),
+        bs_collapse(
+          id = "blob", 
+          content = tagList(
+            br(),
+            fix_ui("column name should not have spaces", 
+                   condition = "check_column_name", 
+                   ns = ns),
+            textInput(ns("blob_column_name"), label = "Column name", 
+                      placeholder = "NameExample") %>%
+              info_tooltip("Column name must not have spaces"),
+            actionButton(ns("add_blob"), label = "Add")
+          )
+        ),
+        br2(),
+        actionLink("read_link", label =  "Read files from database") %>%
+          bs_attach_collapse("read"),
+        bs_collapse(
+          id = "read", 
+          content = tagList(
+            br(),
+            label_container("Download") %>%
+              info_tooltip("Check multiple boxes in table to download."),
+            downloadButton(ns("download"), label = "zip Folder") 
+          )),
+        br2(),
+        actionLink("write_link", label =  "Write files to database") %>%
+          bs_attach_collapse("write"),
+        
+        bs_collapse(
+          id = "write", 
+          content = tagList(
+            br(),
+            fileInput(ns("upload"), label = "Write") %>%
+              info_tooltip("Select only one file and checkbox at a time"),
+            actionButton(ns("write"), label = "File", icon = icon("upload"))
+          )
+        )
+        # hr(),
+        # tags$label("Delete files"),
+        # helpText("Check any number of boxes in table"),
+        # actionButton(ns("delete"), "Delete", icon = icon("trash"))
       ),
       mainPanel(
+        # actionButton(ns("refresh"), label = "Refresh", icon = icon("refresh")),
+        # br(),
         DT::DTOutput(ns("table"))
       )
     )
@@ -74,6 +101,20 @@ mod_readwrite_server <- function(input, output, session){
   
   output$table <- DT::renderDT({data_table()})
   
+  observeEvent(input$add_blob, {
+    req(input$blob_column_name)
+    req(input$table_name)
+    column_name <- input$blob_column_name
+    table_name <- input$table_name
+    conn <- pool$fetch()
+    
+    dbflobr::add_blob_column(column_name, table_name, conn)
+  })
+  
+  observeEvent(input$refresh, {
+    data_table()
+  })
+  
   output$download <- downloadHandler(
     filename = function(){
       glue("slobr-files_{Sys.Date()}.zip")
@@ -86,5 +127,9 @@ mod_readwrite_server <- function(input, output, session){
     },
     contentType = "application/zip"
   )
+  
+  fix_server(output, "check_column_name", 
+             reactive(check_column_name(input$blob_column_name)))
+  
 }
  

@@ -10,3 +10,4 @@ golem::document_and_reload()
 
 # Run the application
 slobr::run_app()
+ 

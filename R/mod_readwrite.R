@@ -17,6 +17,7 @@ mod_readwrite_ui <- function(id){
   ns <- NS(id)
   tagList(
     br(),
+    useShinyjs(),
     sidebarLayout(
       sidebarPanel(
         uiOutput(ns("ui_table_name")),
@@ -41,7 +42,7 @@ mod_readwrite_ui <- function(id){
           id = "write", 
           content = tagList(
             br(),
-            fileInput(ns("upload"), label = "Select file and write to checked box") %>%
+            fileInput(ns("file"), label = "Select file and write to checked box") %>%
               info_tooltip("Select only one file and checkbox at a time"),
             actionButton(ns("write"), label = "write", icon = icon("upload"))
           )
@@ -53,13 +54,13 @@ mod_readwrite_ui <- function(id){
           id = "blob", 
           content = tagList(
             br(),
-            fix_ui("column name should not have spaces", 
-                   condition = "check_column_name", 
-                   ns = ns),
             textInput(ns("blob_column_name"), label = "Column name", 
                       placeholder = "NameExample") %>%
               info_tooltip("Column name must not have spaces"),
-            actionButton(ns("add_blob"), label = "Add")
+            fix_ui("column name should not have spaces", 
+                   condition = "check_column_name", 
+                   ns = ns),
+            actionButton(ns("add_blob"), label = "Add (no undo)")
           )
         )
         # hr(),
@@ -113,6 +114,16 @@ mod_readwrite_server <- function(input, output, session){
     dbflobr::add_blob_column(column_name, table_name, conn)
   })
   
+  observeEvent(input$write, {
+    path <- input$file$datapath
+    id <- checked()
+    showModal(file_modal(id, path))
+    if(is.null(file_modal(id, path))){
+      send_flob(path, id, input$table_name, pool$fetch())
+      reset('file')
+    }
+  })
+  
   observeEvent(input$refresh, {
     data_table()
   })
@@ -132,6 +143,8 @@ mod_readwrite_server <- function(input, output, session){
   
   fix_server(output, "check_column_name", 
              reactive(check_column_name(input$blob_column_name)))
+  
+  
   
 }
  

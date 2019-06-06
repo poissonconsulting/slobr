@@ -89,4 +89,11 @@ get_unflobs <- function(flobs){
   }, USE.NAMES = FALSE)
 }
 
+send_flob <- function(path, id, table_name, conn){
+  key <- get_key(id, table_name, conn)[[1]]
+  flob <- flobr::flob(path)
+  dbflobr::write_flob(flob, column_name = key$column_name, 
+                      table_name = table_name, key = key$key, 
+                      conn = conn, exists = TRUE)
+}
 

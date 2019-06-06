@@ -21,6 +21,32 @@ mod_readwrite_ui <- function(id){
       sidebarPanel(
         uiOutput(ns("ui_table_name")),
         br(),
+        actionLink("read_link", label =  "Read files from database") %>%
+          bs_attach_collapse("read"),
+        bs_collapse(
+          show = TRUE,
+          id = "read", 
+          content = tagList(
+            br(),
+            label_container("Download files from checked boxes") %>%
+              info_tooltip("Check multiple boxes in table to download files into a .zip folder."),
+            downloadButton(ns("download"), label = ".zip"),
+            br()
+          )),
+        br(),
+        actionLink("write_link", label =  "Write files to database") %>%
+          bs_attach_collapse("write"),
+        
+        bs_collapse(
+          id = "write", 
+          content = tagList(
+            br(),
+            fileInput(ns("upload"), label = "Select file and write to checked box") %>%
+              info_tooltip("Select only one file and checkbox at a time"),
+            actionButton(ns("write"), label = "write", icon = icon("upload"))
+          )
+        ),
+        br(),
         actionLink("blob_link", label =  "Add new column") %>%
           bs_attach_collapse("blob"),
         bs_collapse(
@@ -34,30 +60,6 @@ mod_readwrite_ui <- function(id){
                       placeholder = "NameExample") %>%
               info_tooltip("Column name must not have spaces"),
             actionButton(ns("add_blob"), label = "Add")
-          )
-        ),
-        br2(),
-        actionLink("read_link", label =  "Read files from database") %>%
-          bs_attach_collapse("read"),
-        bs_collapse(
-          id = "read", 
-          content = tagList(
-            br(),
-            label_container("Download") %>%
-              info_tooltip("Check multiple boxes in table to download."),
-            downloadButton(ns("download"), label = "zip Folder") 
-          )),
-        br2(),
-        actionLink("write_link", label =  "Write files to database") %>%
-          bs_attach_collapse("write"),
-        
-        bs_collapse(
-          id = "write", 
-          content = tagList(
-            br(),
-            fileInput(ns("upload"), label = "Write") %>%
-              info_tooltip("Select only one file and checkbox at a time"),
-            actionButton(ns("write"), label = "File", icon = icon("upload"))
           )
         )
         # hr(),

@@ -1,7 +1,7 @@
 #' @import shiny
 app_ui <- function() {
   tagList(
-    shinyutils::css_body(),
+    # shinyutils::css_body(),
     shinyutils::css_navbar(),
     tags$head(tags$script(HTML('
                            Shiny.addCustomMessageHandler("jsCode",

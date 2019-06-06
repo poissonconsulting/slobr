@@ -14,8 +14,7 @@ Imports:
     flobr,
     dbflobr,
     shinyutils,
-    DT,
-    shinyjs
+    DT
 Suggests: 
     testthat (>= 2.1.0),
     covr

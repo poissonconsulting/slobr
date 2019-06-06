@@ -12,5 +12,5 @@ run_app <- function(path = system.file("extdata", "demo_db.sqlite", package = "s
   
   # close the pool onExit
   pool_close(pool)
-  shiny::runApp(system.file("app", package = "slobr"))
+  shiny::runApp(system.file("app", package = "slobr"), launch.browser = TRUE)
 }

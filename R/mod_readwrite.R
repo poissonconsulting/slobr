@@ -20,8 +20,25 @@ mod_readwrite_ui <- function(id){
     sidebarLayout(
       sidebarPanel(
         uiOutput(ns("ui_table_name")),
-        downloadButton(ns("download"), label = "Download from selected"),
-        fileInput(ns("upload"), label = "Upload to selected")
+        hr(),
+        tags$label("Add BLOB column"),
+        br(),
+        inline(actionButton(ns("add_blob"), label = "Add")),
+        inline(textInput(ns("blob_column_name"), label = NULL, 
+                  placeholder = "new column name")),
+        hr(),
+        tags$label("Download files"),
+        helpText("Check any number of boxes in table"),
+        downloadButton(ns("download"), label = "Download"),
+        hr(),
+        tags$label("Upload file"),
+        helpText("Check one box in table"),
+        fileInput(ns("upload"), label = NULL),
+        actionButton(ns("upload"), label = "Upload", icon = icon("upload")),
+        hr(),
+        tags$label("Delete files"),
+        helpText("Check any number of boxes in table"),
+        actionButton(ns("delete"), "Delete", icon = icon("trash"))
       ),
       mainPanel(
         DT::DTOutput(ns("table"))

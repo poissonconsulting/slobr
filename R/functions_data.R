@@ -12,7 +12,7 @@ flob_datatable <- function(table_name, conn, ns){
   for(i in blob_cols){
     flobs <- table[[i]]
     ext <- flob_exts(flobs)
-    table[i] <- buttons(col = i, 
+    table[i] <- checkboxes(col = i, 
                         ext = ext,
                         row = seq_len(nrow(table)),
                         ns = ns)

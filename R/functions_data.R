@@ -94,7 +94,17 @@ send_flob <- function(path, id, table_name, conn){
   key <- get_key(id, table_name, conn)[[1]]
   flob <- flobr::flob(path)
   dbflobr::write_flob(flob, column_name = key$column_name, 
-                      table_name = table_name, key = key$key, 
+                      table_name = table_name, 
+                      key = key$key, 
                       conn = conn, exists = TRUE)
+}
+
+delete_flobs <- function(id, table_name, conn){
+  key <- get_key(id, table_name, conn)
+  y <- lapply(key, function(x) {
+    key <- x$key
+    column_name <- x$column_name
+    try(dbflobr::delete_flob(column_name, table_name, key, conn), silent = TRUE)
+  }) 
 }
 

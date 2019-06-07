@@ -108,6 +108,9 @@ mod_readwrite_server <- function(input, output, session){
                 choices = table_names(pool))
   })
   
+  # table <- reactiveValues({table = table_read(input$table_name, pool)})
+  # observe({print(table)})
+  
   data_table <- reactive({
     req(input$table_name)
     flob_datatable(input$table_name, pool, ns = ns)
@@ -118,6 +121,10 @@ mod_readwrite_server <- function(input, output, session){
   })
   
   output$table <- DT::renderDT({data_table()})
+  
+  # observeEvent(input$refresh, {
+  #   data_table()
+  # })
   
   observeEvent(input$add_blob, {
     column_name <- input$blob_column_name
@@ -147,17 +154,11 @@ mod_readwrite_server <- function(input, output, session){
     id <- checked()
     if(isTRUE(delete_modal(id))){
       return({
-        delete_flob(id, input$table_name, pool$fetch())
+        delete_flobs(id, input$table_name, pool$fetch())
       })
     }
     showModal(delete_modal(id))
   })
-  
-  
-  
-  # observeEvent(input$refresh, {
-  #   data_table()
-  # })
   
   observeEvent(input$init_download, {
     id <- checked()

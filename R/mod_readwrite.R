@@ -31,7 +31,9 @@ mod_readwrite_ui <- function(id){
             br(),
             label_container("Download files from checked boxes") %>%
               info_tooltip("Check multiple boxes in table to download files into a .zip folder."),
-            downloadButton(ns("download"), label = ".zip"),
+            # two buttons necessary here so downloadHandler can exit gracefully
+            actionButton(ns("init_download"), ".zip", icon = icon("download")),
+            downloadButton(ns("download"), label = NULL, style = "visibility: hidden;"),
             br()
           )),
         br(),
@@ -105,27 +107,41 @@ mod_readwrite_server <- function(input, output, session){
   output$table <- DT::renderDT({data_table()})
   
   observeEvent(input$add_blob, {
-    req(input$blob_column_name)
-    req(input$table_name)
+
     column_name <- input$blob_column_name
-    table_name <- input$table_name
-    conn <- pool$fetch()
-    
-    dbflobr::add_blob_column(column_name, table_name, conn)
+    if(isTRUE(blob_modal(column_name))){
+      return({
+        dbflobr::add_blob_column(column_name, 
+                                 input$table_name, 
+                                 pool$fetch())
+      })
+    }
+    showModal(blob_modal(column_name))
   })
   
   observeEvent(input$write, {
     path <- input$file$datapath
     id <- checked()
-    showModal(file_modal(id, path))
-    if(is.null(file_modal(id, path))){
-      send_flob(path, id, input$table_name, pool$fetch())
-      reset('file')
+    if(isTRUE(write_modal(id, path))){
+      return({
+        send_flob(path, id, input$table_name, pool$fetch())
+        reset('file')
+      })
     }
+    showModal(write_modal(id, path))
   })
   
   observeEvent(input$refresh, {
     data_table()
+  })
+  
+  observeEvent(input$init_download, {
+    id <- checked()
+    if(!isTRUE(read_modal(id))){
+      return(showModal(read_modal(id)))
+    }
+    js <- glue("document.getElementById('{ns('download')}').click();")
+    shinyjs::runjs(js)
   })
   
   output$download <- downloadHandler(
@@ -133,8 +149,8 @@ mod_readwrite_server <- function(input, output, session){
       glue("slobr-files_{Sys.Date()}.zip")
     },
     content = function(path){
-      flobs <- get_flobs(checked(), input$table_name, pool$fetch())
-      flobs <- rm_null(flobs)
+      id <- checked()
+      flobs <- get_flobs(id, input$table_name, pool$fetch())
       files <- get_unflobs(flobs)
       zip(path, files)
     },
@@ -143,8 +159,6 @@ mod_readwrite_server <- function(input, output, session){
   
   fix_server(output, "check_column_name", 
              reactive(check_column_name(input$blob_column_name)))
-  
-  
   
 }
  

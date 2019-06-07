@@ -71,7 +71,7 @@ get_key <- function(x, table_name, conn){
 
 get_flobs <- function(x, table_name, conn){
   key <- get_key(x, table_name, conn)
-  lapply(key, function(x) {
+  y <- lapply(key, function(x) {
     key <- x$key
     column_name <- x$column_name
     y <- try(dbflobr::read_flob(column_name, table_name, key, conn), silent = TRUE)
@@ -79,6 +79,7 @@ get_flobs <- function(x, table_name, conn){
       return(NULL)
     y
   }) 
+  rm_null(y)
 }
 
 get_unflobs <- function(flobs){

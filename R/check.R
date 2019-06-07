@@ -20,3 +20,40 @@ check_column_name <- function(x){
   y
 }
 
+write_modal <- function(id, path){
+  msg1 <- "Please select only one checkbox"
+  msg2 <- "Please select a checkbox"
+  msg3 <- "Please click browse to find a file to write"
+  
+  if(length(id) == 0){
+    return(modal(msg2))
+  }
+  if(length(id) > 1){
+    return(modal(msg1))
+  }
+  if(is.null(path)){
+    return(modal(msg3))
+  }
+  TRUE
+}
+
+read_modal <- function(x){
+  msg1 <- "Please select a checkbox"
+  if(length(x) == 0){
+    return(modal(msg1))
+  }
+  TRUE
+}
+
+blob_modal <- function(x){
+  msg1 <- "Column name should not have spaces"
+  if(check_column_name(x)){
+    return(modal(msg1))
+  }
+  TRUE
+}
+
+
+
+
+

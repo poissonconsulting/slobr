@@ -21,55 +21,68 @@ mod_readwrite_ui <- function(id){
     sidebarLayout(
       sidebarPanel(
         uiOutput(ns("ui_table_name")),
+        ########## ---------- Read files ---------- ##########
         br(),
-        actionLink("read_link", label =  "Read files from database") %>%
+        actionLink("read_link", label =  "Read files") %>%
           bs_attach_collapse("read"),
         bs_collapse(
           show = TRUE,
           id = "read", 
           content = tagList(
             br(),
-            label_container("Download files from checked boxes") %>%
-              info_tooltip("Check multiple boxes in table to download files into a .zip folder."),
+            label_container("Download from selected checkboxes") %>%
+              info_tooltip("Select multiple checkboxes in table to download files into a .zip folder."),
             # two buttons necessary here so downloadHandler can exit gracefully
             actionButton(ns("init_download"), ".zip", icon = icon("download")),
             downloadButton(ns("download"), label = NULL, style = "visibility: hidden;"),
             br()
           )),
+        ########## ---------- Write files ---------- ##########
         br(),
-        actionLink("write_link", label =  "Write files to database") %>%
+        actionLink("write_link", label =  "Write files") %>%
           bs_attach_collapse("write"),
-        
         bs_collapse(
           id = "write", 
           content = tagList(
             br(),
-            fileInput(ns("file"), label = "Select file and write to checked box") %>%
-              info_tooltip("Select only one file and checkbox at a time"),
+            fileInput(ns("file"), label = "Write to a selected checkbox") %>%
+              info_tooltip("Click 'Browse...' to search for a file. 
+                           Select only one file and checkbox at a time. 
+                           If a file already exists, it will be replaced."),
             actionButton(ns("write"), label = "write", icon = icon("upload"))
           )
         ),
+        ########## ---------- Delete files ---------- ##########
         br(),
-        actionLink("blob_link", label =  "Add new column") %>%
-          bs_attach_collapse("blob"),
+        actionLink("delete_link", label =  "Delete files") %>%
+          bs_attach_collapse("delete"),
         bs_collapse(
-          id = "blob", 
+          id = "delete", 
           content = tagList(
             br(),
-            textInput(ns("blob_column_name"), label = "Column name", 
-                      placeholder = "NameExample") %>%
-              info_tooltip("Column name must not have spaces"),
-            fix_ui("column name should not have spaces", 
-                   condition = "check_column_name", 
-                   ns = ns),
-            actionButton(ns("add_blob"), label = "Add (no undo)")
+            label_container("Delete from selected checkboxes") %>%
+              info_tooltip("Select multiple checkboxes in table to delete files from database. 
+                           There is no undo!"),
+            actionButton(ns("delete"), "Delete", icon = icon("trash"))
           )
+        ),
+      ########## ---------- Add column ---------- ##########
+      br(),
+      actionLink("blob_link", label =  "Add column") %>%
+        bs_attach_collapse("blob"),
+      bs_collapse(
+        id = "blob", 
+        content = tagList(
+          br(),
+          textInput(ns("blob_column_name"), label = "Column name", 
+                    placeholder = "NameExample") %>%
+            info_tooltip("New column name must not have spaces. There is no undo!"),
+          fix_ui("column name should not have spaces", 
+                 condition = "check_column_name", 
+                 ns = ns),
+          actionButton(ns("add_blob"), label = "Add (no undo)")
         )
-        # hr(),
-        # tags$label("Delete files"),
-        # helpText("Check any number of boxes in table"),
-        # actionButton(ns("delete"), "Delete", icon = icon("trash"))
-      ),
+      )),
       mainPanel(
         # actionButton(ns("refresh"), label = "Refresh", icon = icon("refresh")),
         # br(),
@@ -107,7 +120,6 @@ mod_readwrite_server <- function(input, output, session){
   output$table <- DT::renderDT({data_table()})
   
   observeEvent(input$add_blob, {
-
     column_name <- input$blob_column_name
     if(isTRUE(blob_modal(column_name))){
       return({
@@ -131,9 +143,21 @@ mod_readwrite_server <- function(input, output, session){
     showModal(write_modal(id, path))
   })
   
-  observeEvent(input$refresh, {
-    data_table()
+  observeEvent(input$delete, {
+    id <- checked()
+    if(isTRUE(delete_modal(id))){
+      return({
+        delete_flob(id, input$table_name, pool$fetch())
+      })
+    }
+    showModal(delete_modal(id))
   })
+  
+  
+  
+  # observeEvent(input$refresh, {
+  #   data_table()
+  # })
   
   observeEvent(input$init_download, {
     id <- checked()
@@ -156,9 +180,5 @@ mod_readwrite_server <- function(input, output, session){
     },
     contentType = "application/zip"
   )
-  
-  fix_server(output, "check_column_name", 
-             reactive(check_column_name(input$blob_column_name)))
-  
 }
  

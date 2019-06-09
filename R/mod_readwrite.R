@@ -86,7 +86,16 @@ mod_readwrite_ui <- function(id){
       mainPanel(
         # actionButton(ns("refresh"), label = "Refresh", icon = icon("refresh")),
         # br(),
-        DT::DTOutput(ns("table"))
+        DT::DTOutput(ns("table")),
+        tags$script(HTML('$(document).on("click", "input", function () {
+                       var checkboxes = document.getElementsByName("selected");
+                       var checkboxesChecked = [];
+                       for (var i=0; i<checkboxes.length; i++) {
+                       if (checkboxes[i].checked) {
+                       checkboxesChecked.push(checkboxes[i].value);
+                      }
+                      }
+                     Shiny.onInputChange("checked_rows",checkboxesChecked);  })'))
       )
     )
   )
@@ -105,11 +114,11 @@ mod_readwrite_server <- function(input, output, session){
   
   output$ui_table_name <- renderUI({
     selectInput(ns("table_name"), label = "Select table", 
-                choices = table_names(pool))
+                choices = table_names(pool), selected = "Table2")
   })
   
-  # table <- reactiveValues({table = table_read(input$table_name, pool)})
-  # observe({print(table)})
+  table <- reactiveValues(table = NULL)
+  observe({print(input$table_cells_selected)})
   
   data_table <- reactive({
     req(input$table_name)
@@ -120,8 +129,14 @@ mod_readwrite_server <- function(input, output, session){
     checked_ids(input = input)
   })
   
+  # observe({print(input[["_checkrows_flob_1"]])})
+
   output$table <- DT::renderDT({data_table()})
   
+  rv <- reactiveValues(table = table_read(table_name = table_names(pool)[1],
+                                             conn = pool))
+  
+  # observe(print(rv$table))
   # observeEvent(input$refresh, {
   #   data_table()
   # })
@@ -133,6 +148,8 @@ mod_readwrite_server <- function(input, output, session){
         dbflobr::add_blob_column(column_name, 
                                  input$table_name, 
                                  pool$fetch())
+        reset("blob_column_name")
+        rv$bar <- rv$bar + 1
       })
     }
     showModal(blob_modal(column_name))
@@ -144,6 +161,7 @@ mod_readwrite_server <- function(input, output, session){
     if(isTRUE(write_modal(id, path))){
       return({
         send_flob(path, id, input$table_name, pool$fetch())
+        rv$table <- table_read(input$table_name, pool)
         reset('file')
       })
     }
@@ -155,6 +173,7 @@ mod_readwrite_server <- function(input, output, session){
     if(isTRUE(delete_modal(id))){
       return({
         delete_flobs(id, input$table_name, pool$fetch())
+        rv$table <- table_read(input$table_name, pool)
       })
     }
     showModal(delete_modal(id))

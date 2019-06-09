@@ -4,11 +4,10 @@
 # table <- table_read(table_name, conn)
 # x <- table$flob
 
-
+# foo is a reactiveValue used to trigger a rebuild
 flob_datatable <- function(table_name, conn, ns){
   table <- table_read(table_name, conn)
   blob_cols <- blob_column_names(table_name, conn)
-  
   for(i in blob_cols){
     flobs <- table[[i]]
     ext <- flob_exts(flobs)
@@ -17,10 +16,12 @@ flob_datatable <- function(table_name, conn, ns){
                         row = seq_len(nrow(table)),
                         ns = ns)
   }
-  DT::datatable(table, escape = FALSE, selection = 'none', options = list(
-    preDrawCallback = DT::JS('function() { Shiny.unbindAll(this.api().table().node()); }'),
-    drawCallback = DT::JS('function() { Shiny.bindAll(this.api().table().node()); } ')
-  ))
+  DT::datatable(table, escape = FALSE, selection = list(mode = "multiple",
+                                                        target = 'cell'),
+                rownames = FALSE,  class = 'cell-border compact', 
+                options=list(ordering = TRUE, autowidth = FALSE, scrollX = TRUE,
+                             columnDefs = list(list(className = 'dt-center', targets = "_all"))
+                ))
 }
 
 flob_ext <- function(x){

@@ -16,8 +16,10 @@ flob_datatable <- function(table, table_name, conn, ns){
   DT::datatable(table, escape = FALSE, selection = list(mode = "multiple",
                                                         target = 'cell'),
                 rownames = FALSE,  class = 'cell-border compact', 
-                options=list(ordering = TRUE, autowidth = FALSE, scrollX = TRUE,
-                             columnDefs = list(list(className = 'dt-center', targets = "_all"))
+                options = list(dom = "t", ordering = TRUE, 
+                             autowidth = FALSE, scrollX = TRUE, 
+                             columnDefs = list(list(className = 'dt-center', 
+                                                    targets = "_all"))
                 ))
 }
 
@@ -37,6 +39,13 @@ flob_exts <- function(x){
     y[i] <- flob_ext(x[i])
   }
   y
+}
+
+column_matrix <- function(column_name, table_name, conn){
+  column_names <- column_names(table_name, conn)
+  x <- which(column_names == column_name) - 1
+  y <- nrow(table_read(table_name, conn))
+  matrix(c(1:y, rep(x, y)), ncol = 2, byrow = FALSE)
 }
 
 # x is matrix output of input$table_cells_selected

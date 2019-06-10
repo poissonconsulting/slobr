@@ -83,7 +83,11 @@ mod_readwrite_server <- function(input, output, session){
                                        pool))
   })
   
-  rv <- reactiveValues(table = table_read(table_names(pool)[1], conn = pool))
+  rv <- reactiveValues(table = table_read(table_names(pool)[1], pool))
+  
+  observeEvent(input$table_name, {
+    rv$table <- table_read(input$table_name, pool)
+  })
   
   data_table <- reactive({
     req(input$table_name)

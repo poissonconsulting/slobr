@@ -1,9 +1,3 @@
-# path = system.file("extdata", "demo_db.sqlite", package = "slobr")
-# conn <- pool_open(path)
-# table_name = "Table2"
-# table <- table_read(table_name, conn)
-# x <- table$flob
-
 # foo is a reactiveValue used to trigger a rebuild
 flob_datatable <- function(table, table_name, conn, ns){
   table <- table

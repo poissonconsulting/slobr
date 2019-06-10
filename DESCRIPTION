@@ -16,12 +16,14 @@ Imports:
     shinyutils,
     DT,
     bsplus,
-    shinyjs
+    shinyjs,
+    pool
 Suggests: 
     testthat (>= 2.1.0),
     covr
 Remotes:
-    poissonconsulting/shinyutils
+    poissonconsulting/shinyutils,
+    poissonconsulting/dbflobr
 URL: https://github.com/poissonconsulting/slobr
 BugReports: https://github.com/poissonconsulting/slobr/issues
 RoxygenNote: 6.1.1

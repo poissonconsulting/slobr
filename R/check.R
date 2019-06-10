@@ -20,15 +20,15 @@ check_column_name <- function(x){
   y
 }
 
-write_modal <- function(id, path){
-  msg1 <- "Please select only one checkbox"
-  msg2 <- "Please select at least one checkbox"
+write_modal <- function(x, path){
+  msg1 <- "Please select only one cell"
+  msg2 <- "Please select at least one cell"
   msg3 <- "Please click 'Browse...' to find the file you'd like to write"
   
-  if(length(id) == 0){
+  if(nrow(x) == 0){
     return(modal(msg2))
   }
-  if(length(id) > 1){
+  if(nrow(x) > 1){
     return(modal(msg1))
   }
   if(is.null(path)){
@@ -38,8 +38,8 @@ write_modal <- function(id, path){
 }
 
 read_modal <- function(x){
-  msg1 <- "Please select at least one checkbox"
-  if(length(x) == 0){
+  msg1 <- "Please select at least one cell"
+  if(nrow(x) == 0){
     return(modal(msg1))
   }
   TRUE
@@ -54,8 +54,8 @@ blob_modal <- function(x){
 }
 
 delete_modal <- function(x){
-  msg1 <- "Please select at least one checkbox"
-  if(length(x) == 0){
+  msg1 <- "Please select at least one cell"
+  if(nrow(x) == 0){
     return(modal(msg1))
   }
   TRUE

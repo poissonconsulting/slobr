@@ -114,32 +114,18 @@ mod_readwrite_server <- function(input, output, session){
   
   output$ui_table_name <- renderUI({
     selectInput(ns("table_name"), label = "Select table", 
-                choices = table_names(pool), selected = "Table2")
+                choices = table_names(pool))
   })
-  
-  table <- reactiveValues(table = NULL)
-  observe({print(input$table_cells_selected)})
   
   data_table <- reactive({
     req(input$table_name)
-    flob_datatable(input$table_name, pool, ns = ns)
+    flob_datatable(rv$table, input$table_name, pool, ns = ns)
   })
-  
-  checked <- reactive({
-    checked_ids(input = input)
-  })
-  
-  # observe({print(input[["_checkrows_flob_1"]])})
 
   output$table <- DT::renderDT({data_table()})
   
   rv <- reactiveValues(table = table_read(table_name = table_names(pool)[1],
                                              conn = pool))
-  
-  # observe(print(rv$table))
-  # observeEvent(input$refresh, {
-  #   data_table()
-  # })
   
   observeEvent(input$add_blob, {
     column_name <- input$blob_column_name
@@ -157,32 +143,32 @@ mod_readwrite_server <- function(input, output, session){
   
   observeEvent(input$write, {
     path <- input$file$datapath
-    id <- checked()
-    if(isTRUE(write_modal(id, path))){
+    x <- input$table_cells_selected
+    if(isTRUE(write_modal(x, path))){
       return({
-        send_flob(path, id, input$table_name, pool$fetch())
+        send_flob(path, x, input$table_name, pool$fetch())
         rv$table <- table_read(input$table_name, pool)
         reset('file')
       })
     }
-    showModal(write_modal(id, path))
+    showModal(write_modal(x, path))
   })
   
   observeEvent(input$delete, {
-    id <- checked()
-    if(isTRUE(delete_modal(id))){
+    x <- input$table_cells_selected
+    if(isTRUE(delete_modal(x))){
       return({
-        delete_flobs(id, input$table_name, pool$fetch())
+        delete_flobs(x, input$table_name, pool$fetch())
         rv$table <- table_read(input$table_name, pool)
       })
     }
-    showModal(delete_modal(id))
+    showModal(delete_modal(x))
   })
   
   observeEvent(input$init_download, {
-    id <- checked()
-    if(!isTRUE(read_modal(id))){
-      return(showModal(read_modal(id)))
+    x <- input$table_cells_selected
+    if(!isTRUE(read_modal(x))){
+      return(showModal(read_modal(x)))
     }
     js <- glue("document.getElementById('{ns('download')}').click();")
     shinyjs::runjs(js)
@@ -193,8 +179,8 @@ mod_readwrite_server <- function(input, output, session){
       glue("slobr-files_{Sys.Date()}.zip")
     },
     content = function(path){
-      id <- checked()
-      flobs <- get_flobs(id, input$table_name, pool$fetch())
+      x <- input$table_cells_selected
+      flobs <- get_flobs(x, input$table_name, pool$fetch())
       files <- get_unflobs(flobs)
       zip(path, files)
     },

@@ -1,3 +1,19 @@
+file_types <- list(
+  xl = list(ext = c("xls", "xlsx"), icon = "file-excel"),
+  ms = list(ext = c("doc", "docx"), icon = "file-word"),
+  snd = list(ext = c("mp3", "mp4", "wav", "m4a"), icon = "file-sound"),
+  txt = list(ext = c("txt"), icon = "file-text"),
+  pdf = list(ext = c("pdf"), icon = "file-pdf"),
+  img = list(ext = c("png", "jpg"), icon = "file-picture"),
+  csv = list(ext = c("csv"), icon = "file"),
+  mov = list(ext = c("mov"), icon = "file-movie"),
+  ppt = list(ext = c("ppt"), icon = "file-powerpoint"),
+  zip = list(ext = c("zip"), icon = "file-zip"),
+  code = list(ext = c("r", "rds", "js"), icon = "file-code")
+)
+
+usethis::use_data(file_types, internal = TRUE, overwrite = TRUE)
+
 conn <- DBI::dbConnect(RSQLite::SQLite(), "~/Poisson/Code/slobr/slobr/inst/extdata/demo_db.sqlite")
 
 df <- data.frame(char = c("a", "b", "b"),

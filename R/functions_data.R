@@ -5,6 +5,7 @@ flob_datatable <- function(table, table_name, conn, ns){
   for(i in blob_cols){
     flobs <- table[[i]]
     ext <- flob_exts(flobs)
+    print(cell_display(ext))
     table[i] <- cell_display(ext)
   }
   DT::datatable(table, escape = FALSE, selection = list(mode = "multiple",

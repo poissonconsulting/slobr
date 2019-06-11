@@ -3,8 +3,17 @@ cell_display <- function(ext){
     if(x == "empty"){
       return("< ... >")
     }
-    glue("< {x} file >")
+    paste(as.character(icon(ext_icon(x))), x)
   })
+}
+
+ext_icon <- function(ext){
+  y <- rm_null(sapply(file_types, function(x){
+    x$icon[ext %in% x$ext]
+  }))
+  if(length(y))
+    return(paste0(y, "-o"))
+  "file-o"
 }
 
 info_popover <- function(input, content, placement = c("bottom"), 

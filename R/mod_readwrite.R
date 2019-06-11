@@ -22,13 +22,19 @@ mod_readwrite_ui <- function(id){
         uiOutput(ns("ui_table_name")),
         downloadButton(ns("read_handler"), label = NULL,
                        style = "visibility: hidden;"),
+        downloadButton(ns("read_column_handler"), label = NULL,
+                       style = "visibility: hidden;"),
         ########## ---------- Read files ---------- ##########
         br(),
         fluidRow(align = "center",
-                 actionButton(ns("read"), "read", icon = icon("download")),
-                 
-                 actionButton(ns("init_write"), label = "write", icon = icon("upload")),
-                 actionButton(ns("delete"), "delete", icon = icon("trash"))),
+                 actionButton(ns("read"), "read cell(s)", icon = icon("download")),
+                 actionButton(ns("read_column"), label = "read column(s)", 
+                              icon = icon("download")),
+                 br2(),
+                 actionButton(ns("init_write"), label = "write cell", icon = icon("upload")),
+                 br2(),
+                 actionButton(ns("delete"), "delete cell", icon = icon("trash")),
+                 actionButton(ns("delete_column"), "delete column", icon = icon("trash"))),
         br2(),
         actionLink("other_link", label =  "Other options") %>%
             bs_attach_collapse("other"),
@@ -36,9 +42,7 @@ mod_readwrite_ui <- function(id){
               id = "other",
               content = fluidRow(align = "center",
                 br(),
-                actionButton(ns("init_read_column"), 
-                             label = "read column", 
-                             icon = icon("download")),
+                
               downloadButton(ns("read_table"), label = "read table", 
                              icon = icon("download")),
               actionButton(ns("init_add_column"), label = "add column", 
@@ -103,9 +107,44 @@ mod_readwrite_server <- function(input, output, session){
     },
     content = function(path){
       x <- input$table_cells_selected
-      flobs <- get_flobs(x, input$table_name, pool$fetch())
-      files <- get_unflobs(flobs)
+      files <- get_cell_files(x, input$table_name, pool$fetch())
       zip(path, files)
+    },
+    contentType = "application/zip"
+  )
+  
+  observeEvent(input$read_column, {
+    x <- input$table_cells_selected
+    if(!isTRUE(read_modal(x))){
+      return(showModal(read_modal(x)))
+    }
+    js <- glue("document.getElementById('{ns('read_column_handler')}').click();")
+    shinyjs::runjs(js)
+  })
+  
+  output$read_column_handler <- downloadHandler(
+    filename = function(){
+      glue("slobr-files_{Sys.Date()}.zip")
+    },
+    content = function(path){
+      x <- input$table_cells_selected
+      files <- get_column_files(x, input$table_name, pool$fetch())
+      print(str(files))
+      zip(path, files)
+    },
+    contentType = "application/zip"
+  )
+  
+  
+  output$read_table <- downloadHandler(
+    filename = function(){
+      glue("slobr-files_{Sys.Date()}.zip")
+    },
+    content = function(path){
+      table_name <- input$table_name
+      blob_cols <- blob_column_names(table_name, pool)
+      files <- get_column_files(x, table_name, pool, blob_cols)
+      zip(path, unlist(files))
     },
     contentType = "application/zip"
   )
@@ -151,36 +190,5 @@ mod_readwrite_server <- function(input, output, session){
     showModal(read_column_modal(ns = ns))
   })
   
-  output$read_column <- downloadHandler(
-    filename = function(){
-      glue("slobr-files_{Sys.Date()}.zip")
-    },
-    content = function(path){
-      column_name <- input$read_column_name
-      x <- column_matrix(column_name, input$table_name, pool)
-      flobs <- get_flobs(x, input$table_name, pool$fetch())
-      files <- get_unflobs(flobs)
-      zip(path, files)
-    },
-    contentType = "application/zip"
-  )
-  
-  output$read_table <- downloadHandler(
-    filename = function(){
-      glue("slobr-files_{Sys.Date()}.zip")
-    },
-    content = function(path){
-      table_name <- input$table_name
-      blob_cols <- blob_column_names(table_name, pool)
-      print(blob_cols)
-      files <- rm_null(sapply(blob_cols, function(y){
-        z <- column_matrix(y, table_name, pool$fetch())
-        flob <- get_flobs(z, input$table_name, pool$fetch())
-        get_unflobs(flob)
-      }, USE.NAMES = FALSE))
-      zip(path, unlist(files))
-    },
-    contentType = "application/zip"
-  )
 }
  

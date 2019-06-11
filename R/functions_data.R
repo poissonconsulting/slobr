@@ -5,7 +5,6 @@ flob_datatable <- function(table, table_name, conn, ns){
   for(i in blob_cols){
     flobs <- table[[i]]
     ext <- flob_exts(flobs)
-    print(cell_display(ext))
     table[i] <- cell_display(ext)
   }
   DT::datatable(table, escape = FALSE, selection = list(mode = "multiple",
@@ -43,6 +42,11 @@ column_matrix <- function(column_name, table_name, conn){
   matrix(c(1:y, rep(x, y)), ncol = 2, byrow = FALSE)
 }
 
+cell_column_names <- function(x, table_name, conn){
+  y <- get_key(x, table_name, conn)
+  sapply(y, function(x) x$column_name)
+}
+
 # x is matrix output of input$table_cells_selected
 get_key <- function(x, table_name, conn){
   if(length(x) == 0) return()
@@ -78,6 +82,19 @@ get_unflobs <- function(flobs){
     ext <- flobr::flob_ext(y)
     flobr::unflob(y, paste0("file_", x,".", ext))
   }, USE.NAMES = FALSE)
+}
+
+get_cell_files <- function(x, table_name, conn){
+  flobs <- get_flobs(x, table_name, conn)
+  get_unflobs(flobs)
+}
+
+get_column_files <- function(x, table_name, conn, 
+                             column_names = cell_column_names(x, table_name, conn)){
+  unlist(rm_null(sapply(column_names, function(y){
+    z <- column_matrix(y, table_name, conn)
+    get_cell_files(z, table_name, conn)
+  }, USE.NAMES = FALSE)))
 }
 
 send_flob <- function(path, x, table_name, conn){

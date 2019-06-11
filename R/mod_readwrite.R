@@ -46,13 +46,7 @@ mod_readwrite_ui <- function(id){
               ))),
       mainPanel(
         label_container("Select cell(s) to read/write/delete file(s)") %>%
-          info_popover("Files appear in the table as < ext file >, 
-          where 'ext' is the file extension. 
-          Any empty cell appears as < ... >. 
-                       Files may be written to empty cells
-                       or may replace existing files. 
-                       You may read and delete files from multiple cells at once. 
-                       You may write files to only one cell at a time."),
+          info_popover(instructions),
         wellPanel(style = "overflow-y:scroll; max-height: 600px",
                   DT::DTOutput(ns("table")))
         

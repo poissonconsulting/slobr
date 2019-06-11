@@ -12,7 +12,14 @@ file_types <- list(
   code = list(ext = c("r", "rds", "js"), icon = "file-code")
 )
 
-usethis::use_data(file_types, internal = TRUE, overwrite = TRUE)
+instructions <- "Files appear in the table as file icons alongside the extension. 
+          Any cell in a BLOB column without a file appears as < ... >. 
+                       Files may be written to empty cells
+                       or may replace existing files. 
+                       You may read and delete files from multiple cells at once. 
+                       You may write files to only one cell at a time."
+
+usethis::use_data(file_types, instructions, internal = TRUE, overwrite = TRUE)
 
 conn <- DBI::dbConnect(RSQLite::SQLite(), "~/Poisson/Code/slobr/slobr/inst/extdata/demo_db.sqlite")
 

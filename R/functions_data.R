@@ -115,3 +115,11 @@ delete_flobs <- function(x, table_name, conn){
   }) 
 }
 
+delete_flob_column <- function(x, table_name, conn, 
+                               column_names = cell_column_names(x, table_name, conn)){
+  lapply(column_names, function(y){
+    z <- column_matrix(y, table_name, conn)
+    delete_flobs(z, table_name, conn)
+  })
+}
+

@@ -33,8 +33,8 @@ mod_readwrite_ui <- function(id){
                  br2(),
                  actionButton(ns("init_write"), label = "write cell", icon = icon("upload")),
                  br2(),
-                 actionButton(ns("delete"), "delete cell", icon = icon("trash")),
-                 actionButton(ns("delete_column"), "delete column", icon = icon("trash"))),
+                 actionButton(ns("delete"), "delete cell(s)", icon = icon("trash")),
+                 actionButton(ns("delete_column"), "delete column(s)", icon = icon("trash"))),
         br2(),
         actionLink("other_link", label =  "Other options") %>%
             bs_attach_collapse("other"),
@@ -135,6 +135,28 @@ mod_readwrite_server <- function(input, output, session){
     contentType = "application/zip"
   )
   
+  observeEvent(input$delete, {
+    x <- input$table_cells_selected
+    if(isTRUE(delete_modal(x))){
+      return({
+        delete_flobs(x, input$table_name, pool$fetch())
+        rv$table <- table_read(input$table_name, pool)
+      })
+    }
+    showModal(delete_modal(x))
+  })
+  
+  observeEvent(input$delete_column, {
+    x <- input$table_cells_selected
+    if(isTRUE(delete_modal(x))){
+      return({
+        delete_flob_column(x, input$table_name, pool$fetch())
+        rv$table <- table_read(input$table_name, pool)
+      })
+    }
+    showModal(delete_modal(x))
+  })
+  
   
   output$read_table <- downloadHandler(
     filename = function(){
@@ -162,16 +184,7 @@ mod_readwrite_server <- function(input, output, session){
     reset('file')
   })
   
-  observeEvent(input$delete, {
-    x <- input$table_cells_selected
-    if(isTRUE(delete_modal(x))){
-      return({
-        delete_flobs(x, input$table_name, pool$fetch())
-        rv$table <- table_read(input$table_name, pool)
-      })
-    }
-    showModal(delete_modal(x))
-  })
+  
   
   observeEvent(input$init_add_column, {
     showModal(add_column_modal(ns = ns))

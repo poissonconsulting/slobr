@@ -1,4 +1,5 @@
 pool_open <- function(path){
+  if(is.null(path)) return(NULL)
   pool::dbPool(
     drv = RSQLite::SQLite(),
     dbname = path
@@ -12,6 +13,7 @@ pool_close <- function(conn){
 }
 
 table_names <- function(conn){
+  if(is.null(conn)) return(NULL)
   DBI::dbListTables(conn)
 }
 
@@ -20,6 +22,7 @@ column_names <- function(table_name, conn) {
 }
 
 table_read <- function(table_name, conn){
+  if(is.null(conn)) return(NULL)
   DBI::dbReadTable(conn, name = table_name)
 }
 

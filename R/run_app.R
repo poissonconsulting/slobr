@@ -1,16 +1,16 @@
 #' Run the Shiny Application
 #'
-#' @param path A path to SQLite database.
+#' @param path A path to SQLite database. Use "demo" to load demo database.
 #' @export
 #' @importFrom shiny runApp
-run_app <- function(path = system.file("extdata", "demo_db.sqlite", package = "slobr")) {
+run_app <- function(path = NULL) {
   
-  check_string(path)
+  checkor(check_string(path), check_null(path))
+  
+  if(isTRUE(path == "demo"))
+    path <- system.file("extdata", "demo_db.sqlite", package = "slobr")
 
-  pool <- pool_open(path)
-  shinyOptions(pool = pool)
+  shinyOptions(path = path)
   
-  # close the pool onExit
-  pool_close(pool)
   shiny::runApp(system.file("app", package = "slobr"), launch.browser = TRUE)
 }

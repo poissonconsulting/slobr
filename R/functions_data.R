@@ -97,6 +97,14 @@ get_column_files <- function(x, table_name, conn,
   }, USE.NAMES = FALSE)))
 }
 
+get_column_flobs <- function(x, table_name, conn, 
+                             column_names = cell_column_names(x, table_name, conn)){
+  rm_null(sapply(column_names, function(y){
+    z <- column_matrix(y, table_name, conn)
+    get_flobs(z, table_name, conn)
+  }, USE.NAMES = FALSE))
+}
+
 send_flob <- function(path, x, table_name, conn){
   key <- get_key(x, table_name, conn)[[1]]
   flob <- flobr::flob(path)
@@ -121,5 +129,28 @@ delete_flob_column <- function(x, table_name, conn,
     z <- column_matrix(y, table_name, conn)
     delete_flobs(z, table_name, conn)
   })
+}
+
+file_name <- function(x, table_name, conn, column = FALSE){
+  if(nrow(x) > 1)
+    return(glue("slobr-files_{Sys.Date()}.zip"))
+  ext <- flob_ext(get_flobs(x, table_name, conn))
+  if(column){
+    flobs <- get_column_flobs(x, table_name, conn)
+    print(flob_ext(flobs))
+    ext <- flob_ext(flobs)
+    print(ext)
+  }
+  glue("slobr-files_{Sys.Date()}.{ext}")
+}
+
+download_file <- function(x, table_name, conn, path, column = FALSE){
+  files <- get_cell_files(x, table_name, conn)
+  if(column){
+    files <- get_column_files(x, table_name, conn)
+  }
+  if(length(files) > 1)
+    return(zip(path, files))
+  file.copy(files, path)
 }
 

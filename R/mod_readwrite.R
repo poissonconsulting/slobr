@@ -31,7 +31,8 @@ mod_readwrite_ui <- function(id){
                  actionButton(ns("read_column"), label = "read column(s)", 
                               icon = icon("download")),
                  br2(),
-                 actionButton(ns("init_write"), label = "write cell", icon = icon("upload")),
+                 actionButton(ns("init_write"), label = "write cell", 
+                                     icon = icon("upload")),
                  br2(),
                  actionButton(ns("delete"), "delete cell(s)", icon = icon("trash")),
                  actionButton(ns("delete_column"), "delete column(s)", icon = icon("trash"))),
@@ -103,12 +104,13 @@ mod_readwrite_server <- function(input, output, session){
   
   output$read_handler <- downloadHandler(
     filename = function(){
-      glue("slobr-files_{Sys.Date()}.zip")
+      file_name(input$table_cells_selected,
+                input$table_name, pool$fetch())
     },
     content = function(path){
-      x <- input$table_cells_selected
-      files <- get_cell_files(x, input$table_name, pool$fetch())
-      zip(path, files)
+      download_file(input$table_cells_selected,
+                    input$table_name, pool$fetch(),
+                    path)
     },
     contentType = "application/zip"
   )
@@ -124,13 +126,13 @@ mod_readwrite_server <- function(input, output, session){
   
   output$read_column_handler <- downloadHandler(
     filename = function(){
-      glue("slobr-files_{Sys.Date()}.zip")
+      file_name(input$table_cells_selected,
+                input$table_name, pool$fetch(), column = TRUE)
     },
     content = function(path){
-      x <- input$table_cells_selected
-      files <- get_column_files(x, input$table_name, pool$fetch())
-      print(str(files))
-      zip(path, files)
+      download_file(input$table_cells_selected,
+                    input$table_name, pool$fetch(),
+                    path, column = TRUE)
     },
     contentType = "application/zip"
   )
@@ -156,7 +158,6 @@ mod_readwrite_server <- function(input, output, session){
     }
     showModal(delete_modal(x))
   })
-  
   
   output$read_table <- downloadHandler(
     filename = function(){
@@ -184,8 +185,6 @@ mod_readwrite_server <- function(input, output, session){
     reset('file')
   })
   
-  
-  
   observeEvent(input$init_add_column, {
     showModal(add_column_modal(ns = ns))
   })
@@ -197,10 +196,6 @@ mod_readwrite_server <- function(input, output, session){
                              pool$fetch())
     rv$table <- table_read(input$table_name, pool)
     reset('add_column_name')
-  })
-  
-  observeEvent(input$init_read_column, {
-    showModal(read_column_modal(ns = ns))
   })
   
 }

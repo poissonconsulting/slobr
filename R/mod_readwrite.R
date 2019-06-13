@@ -19,7 +19,8 @@ mod_readwrite_ui <- function(id){
     useShinyjs(),
     sidebarLayout(
       sidebarPanel(
-        fileInput(ns("dbpath"), label = "Select database"),
+        fileInput(ns("dbpath"), label = "Select database") %>%
+          info_tooltip("hi"),
         uiOutput(ns("ui_table_name")),
         downloadButton(ns("read_handler"), label = NULL,
                        style = "visibility: hidden;"),
@@ -35,8 +36,7 @@ mod_readwrite_ui <- function(id){
                                     icon = icon("download")),
                        br2(),
                        actionButton(ns("init_write"), label = "write cell", 
-                                    icon = icon("upload"))
-              ),
+                                    icon = icon("upload"))),
               br2(),
               actionLink("other_link", label =  "Other options") %>%
                 bs_attach_collapse("other"),
@@ -90,6 +90,24 @@ mod_readwrite_server <- function(input, output, session){
       shinyjs::show("div_output")
       shinyjs::show("div_input")
     } 
+  })
+  
+  observe({
+    if(is.null(input$file$datapath)){
+      shinyjs::disable("write")
+    } else {
+      shinyjs::enable("write")
+    }
+  })
+  
+  observe({
+    req(input$table_name)
+    if(check_column_name(input$add_column_name, 
+                          input$table_name, rv$conn)){
+      shinyjs::enable("add_column")
+    } else {
+      shinyjs::disable("add_column")
+    }
   })
   
   observeEvent(input$dbpath, {

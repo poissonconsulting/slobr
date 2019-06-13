@@ -1,10 +1,3 @@
-button <- function(id, label, icon, status){
-  tags$button(id = id, 
-              type = "button", 
-              class = glue("btn action-button btn-large btn-{status}"), 
-              HTML(as.character(icon(icon)), label))
-}
-
 cell_display <- function(ext){
   sapply(ext, function(x){
     if(x == "empty"){
@@ -45,7 +38,7 @@ label_container <- function(x){
   tags$div(tags$label(x), class = "form-group shiny-input-container")
 }
 
-modal <- function(x, footer = NULL, title = "oops"){
+modal <- function(x, footer = NULL, title = "oops..."){
   modalDialog(
     title = title,
     x,

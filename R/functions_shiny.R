@@ -1,3 +1,21 @@
+flob_datatable <- function(table, table_name, conn, ns){
+  table <- table
+  blob_cols <- blob_columns(table_name, conn)
+  for(i in blob_cols){
+    flobs <- table[[i]]
+    ext <- flob_exts(flobs)
+    table[i] <- cell_display(ext)
+  }
+  DT::datatable(table, escape = FALSE, selection = list(mode = "multiple",
+                                                        target = 'cell'),
+                rownames = FALSE,  class = 'cell-border compact', 
+                options = list(dom = "t", ordering = TRUE, 
+                               autowidth = FALSE, scrollX = TRUE, 
+                               columnDefs = list(list(className = 'dt-center', 
+                                                      targets = "_all"))
+                ))
+}
+
 cell_display <- function(ext){
   sapply(ext, function(x){
     if(x == "empty"){
@@ -64,26 +82,26 @@ write_modal <- function(x, ns){
   
 }
 
-read_modal <- function(x, table_name, conn){
+read_modal <- function(x, table_name, conn, by_column = FALSE){
   msg1 <- "Please select at least one cell"
   msg2 <- "There isn't a file there!"
   if(nrow(x) == 0){
     return(modal(msg1))
   }
-  y <- get_column_flobs(x, table_name, conn)
+  y <- get_flobs(x, table_name, conn, by_column)
   if(!length(y))
     return(modal(msg2))
   TRUE
 }
 
-delete_modal <- function(x, table_name, conn){
+delete_modal <- function(x, table_name, conn, by_column = FALSE){
   msg1 <- "Please select at least one cell"
   msg2 <- "There isn't a file there!"
   
   if(nrow(x) == 0){
     return(modal(msg1))
   }
-  y <- get_column_flobs(x, table_name, conn)
+  y <- get_flobs(x, table_name, conn, by_column)
   if(!length(y))
     return(modal(msg2))
   TRUE

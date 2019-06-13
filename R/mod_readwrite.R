@@ -174,7 +174,8 @@ mod_readwrite_server <- function(input, output, session){
 
   observeEvent(input$read_column, {
     x <- input$table_cells_selected
-    y <- read_modal(x, input$table_name, rv$conn$fetch())
+    y <- read_modal(x, input$table_name, 
+                    conn = rv$conn$fetch(), by_column = TRUE)
     if(!isTRUE(y)){
       return(showModal(y))
     }
@@ -185,12 +186,12 @@ mod_readwrite_server <- function(input, output, session){
   output$read_column_handler <- downloadHandler(
     filename = function(){
       file_name(input$table_cells_selected,
-                input$table_name, rv$conn$fetch(), column = TRUE)
+                input$table_name, rv$conn$fetch(), by_column = TRUE)
     },
     content = function(path){
       download_file(input$table_cells_selected,
                     input$table_name, rv$conn$fetch(),
-                    path, column = TRUE)
+                    path, by_column = TRUE)
     },
     contentType = "application/zip"
   )
@@ -200,7 +201,7 @@ mod_readwrite_server <- function(input, output, session){
     y <- delete_modal(x, input$table_name, rv$conn$fetch())
     if(isTRUE(y)){
       return({
-        delete_flobs(x, input$table_name, rv$conn$fetch())
+        delete_flob(x, input$table_name, rv$conn$fetch())
         rv$table <- table_read(input$table_name, rv$conn)
       })
     }
@@ -210,10 +211,9 @@ mod_readwrite_server <- function(input, output, session){
   observeEvent(input$delete_column, {
     x <- input$table_cells_selected
     y <- delete_modal(x, input$table_name, rv$conn$fetch())
-    
     if(isTRUE(y)){
       return({
-        delete_flob_column(x, input$table_name, rv$conn$fetch())
+        delete_flob(x, input$table_name, rv$conn$fetch(), by_column = TRUE)
         rv$table <- table_read(input$table_name, rv$conn)
       })
     }
@@ -226,9 +226,8 @@ mod_readwrite_server <- function(input, output, session){
     },
     content = function(path){
       table_name <- input$table_name
-      blob_cols <- blob_column_names(table_name, rv$conn)
-      files <- get_column_files(x, table_name, rv$conn, blob_cols)
-      zip(path, unlist(files))
+      files <- get_files_table(table_name, rv$conn$fetch())
+      zip(path, files)
     },
     contentType = "application/zip"
   )
@@ -241,7 +240,7 @@ mod_readwrite_server <- function(input, output, session){
   observeEvent(input$write, {
     x <- input$table_cells_selected
     path <- input$file$datapath
-    send_flob(path, x, input$table_name, rv$conn$fetch())
+    send_flob(x, input$table_name, rv$conn$fetch(), path)
     rv$table <- table_read(input$table_name, rv$conn)
     reset('file')
   })
@@ -252,8 +251,7 @@ mod_readwrite_server <- function(input, output, session){
 
   observeEvent(input$add_column, {
     column_name <- input$add_column_name
-    dbflobr::add_blob_column(column_name,
-                             input$table_name,
+    add_column(column_name, input$table_name,
                              rv$conn$fetch())
     rv$table <- table_read(input$table_name, rv$conn)
     reset('add_column_name')

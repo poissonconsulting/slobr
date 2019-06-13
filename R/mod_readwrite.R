@@ -20,7 +20,7 @@ mod_readwrite_ui <- function(id){
     sidebarLayout(
       sidebarPanel(
         fileInput(ns("dbpath"), label = "Select database") %>%
-          info_tooltip("hi"),
+          info_tooltip("must be a SQLite database"),
         uiOutput(ns("ui_table_name")),
         downloadButton(ns("read_handler"), label = NULL,
                        style = "visibility: hidden;"),
@@ -31,12 +31,12 @@ mod_readwrite_ui <- function(id){
         shinyjs::hidden(
           div(id = ns("div_input"),
               fluidRow(align = "center",
-                       actionButton(ns("read"), "read cell(s)", icon = icon("download")),
-                       actionButton(ns("read_column"), label = "read column(s)", 
-                                    icon = icon("download")),
+                       button(ns("read"), "read cell(s)", "download", "primary"),
+                       button(ns("read_column"), "read column(s)", 
+                              "download", "primary"),
                        br2(),
-                       actionButton(ns("init_write"), label = "write cell", 
-                                    icon = icon("upload"))),
+                       button(ns("init_write"), "write cell", 
+                              "upload", "success")),
               br2(),
               actionLink("other_link", label =  "Other options") %>%
                 bs_attach_collapse("other"),
@@ -44,14 +44,16 @@ mod_readwrite_ui <- function(id){
                 id = "other",
                 content = fluidRow(align = "center",
                                    br(),
-                                   actionButton(ns("delete"), "delete cell(s)", icon = icon("trash")),
-                                   actionButton(ns("delete_column"), "delete column(s)", icon = icon("trash")),
+                                   button(ns("delete"), "delete cell(s)",
+                                          "trash", "danger"),
+                                   button(ns("delete_column"), "delete column(s)", 
+                                          "trash", "danger"),
                                    br2(),
-                                   downloadButton(ns("read_table"), label = "read table", 
-                                                  icon = icon("download")),
+                                   button(ns("read_table"), "read table",
+                                          "download", "primary"),
                                    br2(),
-                                   actionButton(ns("init_add_column"), label = "add column", 
-                                                icon = icon("table")) 
+                                   button(ns("init_add_column"), "add column", 
+                                          "table", "success") 
                 ))))),
       mainPanel(
         bs_modal(ns("modal_info"),

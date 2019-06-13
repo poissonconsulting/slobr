@@ -1,3 +1,10 @@
+button <- function(id, label, icon, status){
+  tags$button(id = id, 
+              type = "button", 
+              class = glue("btn action-button btn-large btn-{status}"), 
+              HTML(as.character(icon(icon)), label))
+}
+
 cell_display <- function(ext){
   sapply(ext, function(x){
     if(x == "empty"){

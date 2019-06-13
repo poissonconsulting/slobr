@@ -17,7 +17,7 @@ app_ui <- function() {
                tabPanel(title = "Read and Write Files",
                         mod_readwrite_ui("readwrite_ui_1")),
                tabPanel(title = "About",
-                        shinyutils::mod_about_ui("about_ui_1"))
+                        shinyutils::mod_about_ui("about_ui_1", citation = tagList(p(""))))
                )
   )
 }

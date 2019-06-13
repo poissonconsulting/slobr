@@ -23,7 +23,9 @@ Suggests:
     covr
 Remotes:
     poissonconsulting/shinyutils,
-    poissonconsulting/dbflobr
+    poissonconsulting/dbflobr,
+    poissonconsulting/flobr,
+    poissonconsulting/shinyutils
 URL: https://github.com/poissonconsulting/slobr
 BugReports: https://github.com/poissonconsulting/slobr/issues
 RoxygenNote: 6.1.1

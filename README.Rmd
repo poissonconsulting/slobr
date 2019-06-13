@@ -18,10 +18,8 @@ knitr::opts_chunk$set(
 
 # slobr
 
-`slobr` is a Shiny app to read and write files to databases as [flobs](https://poissonconsulting.github.io/flobr/reference/flob.html).
+`slobr` is a Shiny app to read and write files to SQLite databases as [flobs](https://poissonconsulting.github.io/flobr/reference/flob.html).
 A flob is a special type of BLOB that includes the file extension type.
-
-## Installation
 
 ## Installation
 
@@ -29,7 +27,7 @@ To install the latest development version from [GitHub](https://github.com/poiss
 ```
 # install.packages("devtools")
 devtools::install_github("poissonconsulting/checkr")
-devtools::install_github("poissonconsulting/err")
+devtools::install_github("poissonconsulting/shinyutils")
 devtools::install_github("poissonconsulting/flobr")
 devtools::install_github("poissonconsulting/dbflobr")
 devtools::install_github("poissonconsulting/slobr")
@@ -43,16 +41,17 @@ install.packages("slobr")
 ```
 ## Usage
 
-```{r example}
+```{r example, eval = FALSE}
 library(slobr)
-## basic example code
+# to run with a demo database
+slobr::run_app("demo")
 ```
 
-## Citation
+<!-- ## Citation -->
 
-```{r, comment="", echo=FALSE}
-citation(package = "dbflobr")
-```
+<!-- ```{r, comment="", echo=FALSE} -->
+<!-- citation(package = "dbflobr") -->
+<!-- ``` -->
 
 ## Contribution
 

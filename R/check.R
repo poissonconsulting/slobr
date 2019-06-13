@@ -24,3 +24,10 @@ check_column_name <- function(x, table_name, conn){
   TRUE
 }
 
+check_db_extension <- function(x){
+  x <- tolower(tools::file_ext(x))
+  if(!(x %in% c("sqlite", "db")))
+    return(FALSE)
+  TRUE
+}
+

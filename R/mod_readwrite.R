@@ -19,17 +19,15 @@ mod_readwrite_ui <- function(id){
     useShinyjs(),
     sidebarLayout(
       sidebarPanel(
-        fileInput(ns("dbpath"), label = "Select database") %>%
-          info_tooltip("must be a SQLite database"),
-        uiOutput(ns("ui_table_name")),
-        downloadButton(ns("read_handler"), label = NULL,
-                       style = "visibility: hidden;"),
-        downloadButton(ns("read_column_handler"), label = NULL,
-                       style = "visibility: hidden;"),
-        ########## ---------- Read files ---------- ##########
-        br(),
+        fileInput(ns("dbpath"), label = "Select database",
+                  accept = c("sqlite", "db")) %>%
+          info_tooltip("Must be a SQLite database"),
+        shinyjs::hidden(div(id = ns("div_dbhelp"), 
+                            helpText("This is not a SQLite database"))),
         shinyjs::hidden(
           div(id = ns("div_input"),
+              uiOutput(ns("ui_table_name")),
+              br(),
               fluidRow(align = "center",
                        button(ns("read"), "read cell(s)", "download", "primary"),
                        button(ns("read_column"), "read column(s)", 
@@ -67,7 +65,11 @@ mod_readwrite_ui <- function(id){
             wellPanel(style = "overflow-y:scroll; max-height: 600px",
                       DT::DTOutput(ns("table")))
           )
-        )
+        ),
+        downloadButton(ns("read_handler"), label = NULL,
+                       style = "visibility: hidden;"),
+        downloadButton(ns("read_column_handler"), label = NULL,
+                       style = "visibility: hidden;")
       ))
   )
 }
@@ -91,7 +93,12 @@ mod_readwrite_server <- function(input, output, session){
     if(!is.null(rv$table)){
       shinyjs::show("div_output")
       shinyjs::show("div_input")
-    } 
+      shinyjs::hide("div_dbhelp")
+    } else {
+      shinyjs::hide("div_output")
+      shinyjs::hide("div_input")
+      shinyjs::show("div_dbhelp")
+    }
   })
   
   observe({
@@ -113,7 +120,12 @@ mod_readwrite_server <- function(input, output, session){
   })
   
   observeEvent(input$dbpath, {
-    conn <- pool_open(input$dbpath$datapath)
+    path <- input$dbpath$datapath
+    if(!check_db_extension(path)){
+      rv$table <- NULL
+      return()
+    }
+    conn <- pool_open(path)
     tbnames <- table_names(conn)
     rv$conn <- conn
     rv$tbnames <- tbnames

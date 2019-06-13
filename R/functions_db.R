@@ -59,3 +59,8 @@ blob_column_names <- function(table_name, conn){
     is_column_blob(x, table_name, conn)
   }))]
 }
+
+column_exists <- function(x, table_name, conn){
+  column_names <- column_names(table_name, conn)
+  x %in% column_names
+}

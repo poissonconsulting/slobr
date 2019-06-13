@@ -25,6 +25,15 @@ info_modal <- function(input, modal_id){
         ))
 }
 
+info_tooltip <- function(input, x){
+  input %>%
+    shinyInput_label_embed(
+      shiny_iconlink() %>%
+        bs_embed_tooltip(
+          title = x, placement = "bottom"
+        ))
+}
+
 label_container <- function(x){
   tags$div(tags$label(x), class = "form-group shiny-input-container")
 }
@@ -47,7 +56,8 @@ write_modal <- function(x, ns){
   if(nrow(x) > 1){
     return(modal(msg1))
   }
-  modal(fileInput(ns("file"), label = NULL), 
+  modal(
+    fileInput(ns("file"), label = NULL), 
         title = "Select file",
         footer = actionButton(ns("write"), label = "write", 
                               icon = icon("upload")))
@@ -80,11 +90,15 @@ delete_modal <- function(x, table_name, conn){
 }
 
 add_column_modal <- function(ns){
-  modal(
-    textInput(ns("add_column_name"), label = NULL, placeholder = "NewColumn"),
-    title = "Enter new column name",
-    actionButton(ns("add_column"), label = "add column", 
-                 icon = icon("table"))
+  tagList(
+    bsplus::use_bs_tooltip(),
+    modal(
+      textInput(ns("add_column_name"), label = "New column name", placeholder = "NewColumn") %>%
+        info_tooltip("Column name cannot include spaces and cannot already exist in the table."),
+      title = NULL,
+      actionButton(ns("add_column"), label = "add column", 
+                   icon = icon("table"))
+    )
   )
 }
 

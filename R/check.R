@@ -13,10 +13,14 @@ check_sqlite_connection <- function(x, connected = NA, x_name = substitute(x), e
 
 count_space <- function(x) sapply(gregexpr(" ", x), function(y) {sum(y >= 0)})
 
-check_column_name <- function(x){
-  y <- FALSE
+
+check_column_name <- function(x, table_name, conn){
+  if(is.null(x) || x == "")
+    return(FALSE)
   if(count_space(x) > 0)
-    y <- TRUE
-  y
+    return(FALSE)
+  if(column_exists(x, table_name, conn))
+    return(FALSE)
+  TRUE
 }
 

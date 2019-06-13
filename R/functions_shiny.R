@@ -16,15 +16,12 @@ ext_icon <- function(ext){
   "file-o"
 }
 
-info_popover <- function(input, content, placement = c("bottom"), 
-                         title = "How to use table"){
+info_modal <- function(input, modal_id){
   input %>%
     shinyInput_label_embed(
       shiny_iconlink() %>%
-        bs_embed_popover(
-          title = title,
-          content = content,
-          placement = placement
+        bs_attach_modal(
+          modal_id
         ))
 }
 
@@ -57,29 +54,29 @@ write_modal <- function(x, ns){
   
 }
 
-read_modal <- function(x){
+read_modal <- function(x, table_name, conn){
   msg1 <- "Please select at least one cell"
+  msg2 <- "There isn't a file there!"
   if(nrow(x) == 0){
     return(modal(msg1))
   }
+  y <- get_column_flobs(x, table_name, conn)
+  if(!length(y))
+    return(modal(msg2))
   TRUE
 }
 
-delete_modal <- function(x){
+delete_modal <- function(x, table_name, conn){
   msg1 <- "Please select at least one cell"
+  msg2 <- "There isn't a file there!"
+  
   if(nrow(x) == 0){
     return(modal(msg1))
   }
+  y <- get_column_flobs(x, table_name, conn)
+  if(!length(y))
+    return(modal(msg2))
   TRUE
-}
-
-read_column_modal <- function(ns){
-  modal(
-    uiOutput(ns("ui_column_name")),
-    title = "Select column",
-    footer = downloadButton(ns("read_column"),
-                            label = "read", 
-                            icon = icon("download")))
 }
 
 add_column_modal <- function(ns){

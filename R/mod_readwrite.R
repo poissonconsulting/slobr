@@ -54,10 +54,14 @@ mod_readwrite_ui <- function(id){
                                                 icon = icon("table")) 
                 ))))),
       mainPanel(
+        bs_modal(ns("modal_info"),
+                 title = "How to use this table",
+                 body = instructions,
+                 footer = bs_modal_closebutton("Got it")),
         shinyjs::hidden(
           div(id = ns("div_output"),
             label_container("Select cell(s) to read/write/delete file(s)") %>%
-              info_popover(instructions),
+              info_modal(ns("modal_info")),
             wellPanel(style = "overflow-y:scroll; max-height: 600px",
                       DT::DTOutput(ns("table")))
           )
@@ -115,8 +119,9 @@ mod_readwrite_server <- function(input, output, session){
   
   observeEvent(input$read, {
     x <- input$table_cells_selected
-    if(!isTRUE(read_modal(x))){
-      return(showModal(read_modal(x)))
+    y <- read_modal(x, input$table_name, rv$conn$fetch())
+    if(!isTRUE(y)){
+      return(showModal(y))
     }
     js <- glue("document.getElementById('{ns('read_handler')}').click();")
     shinyjs::runjs(js)
@@ -137,8 +142,9 @@ mod_readwrite_server <- function(input, output, session){
 
   observeEvent(input$read_column, {
     x <- input$table_cells_selected
-    if(!isTRUE(read_modal(x))){
-      return(showModal(read_modal(x)))
+    y <- read_modal(x, input$table_name, rv$conn$fetch())
+    if(!isTRUE(y)){
+      return(showModal(y))
     }
     js <- glue("document.getElementById('{ns('read_column_handler')}').click();")
     shinyjs::runjs(js)
@@ -159,24 +165,27 @@ mod_readwrite_server <- function(input, output, session){
 
   observeEvent(input$delete, {
     x <- input$table_cells_selected
-    if(isTRUE(delete_modal(x))){
+    y <- delete_modal(x, input$table_name, rv$conn$fetch())
+    if(isTRUE(y)){
       return({
         delete_flobs(x, input$table_name, rv$conn$fetch())
         rv$table <- table_read(input$table_name, rv$conn)
       })
     }
-    showModal(delete_modal(x))
+    showModal(y)
   })
 
   observeEvent(input$delete_column, {
     x <- input$table_cells_selected
-    if(isTRUE(delete_modal(x))){
+    y <- delete_modal(x, input$table_name, rv$conn$fetch())
+    
+    if(isTRUE(y)){
       return({
         delete_flob_column(x, input$table_name, rv$conn$fetch())
         rv$table <- table_read(input$table_name, rv$conn)
       })
     }
-    showModal(delete_modal(x))
+    showModal(y)
   })
 
   output$read_table <- downloadHandler(

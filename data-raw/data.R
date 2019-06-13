@@ -12,12 +12,18 @@ file_types <- list(
   code = list(ext = c("r", "rds", "js"), icon = "file-code")
 )
 
-instructions <- "Files appear in the table as file icons alongside the extension. 
-          Any cell in a BLOB column without a file appears as < ... >. 
-                       Files may be written to empty cells
-                       or may replace existing files. 
-                       You may read and delete files from multiple cells at once. 
-                       You may write files to only one cell at a time."
+instructions <- tagList(p(
+  HTML(glue("Files appear in the table as file icons alongside the extension (e.g. {as.character(icon('file-pdf-o'))} pdf). 
+          Any cell with no file appears as < ... >."))
+), br(),
+h5("Read/delete files"), 
+p("Select one or more cells in the table and click 'read cell(s)' or 
+'delete cell(s)' to read or delete just those cells.
+          Click 'read column' or 'delete column' to read or delete all files
+  in the columns containing the selected cells."),
+br(),
+h5("Write files"), 
+p("To write a file, only one cell can be selected at at time. If a file already exists there it will be replaced."))
 
 usethis::use_data(file_types, instructions, internal = TRUE, overwrite = TRUE)
 
@@ -37,6 +43,8 @@ DBI::dbWriteTable(conn, "Table2", df, overwrite = TRUE)
 
 write.csv(data.frame(x = 1), "~/Poisson/Code/slobr/slobr/inst/extdata/df.csv")
 flob2 <- flobr::flob("~/Poisson/Code/slobr/slobr/inst/extdata/df.csv")
+flob3 <- flobr::flob("~/Poisson/Code/slobr/slobr/inst/extdata/profile.jpg")
+flob4 <- flobr::flob("~/Poisson/Code/slobr/slobr/inst/extdata/test.xlsx")
 
 dbflobr::write_flob(flobr::flob_obj, "flob", "Table1", key = data.frame(int = 1L), 
                     conn = conn, exists = FALSE)
@@ -46,5 +54,11 @@ dbflobr::write_flob(flob2, "flob", "Table1", key = data.frame(int = 2L),
 
 dbflobr::write_flob(flob2, "flob2", "Table1", key = data.frame(int = 1L), 
                     conn = conn, exists = FALSE)
+
+dbflobr::write_flob(flob3, "flob2", "Table1", key = data.frame(int = 2L), 
+                    conn = conn, exists = TRUE)
+
+dbflobr::write_flob(flob4, "flob2", "Table1", key = data.frame(int = 3L), 
+                    conn = conn, exists = TRUE)
 
 DBI::dbDisconnect(conn)

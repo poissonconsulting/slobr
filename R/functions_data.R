@@ -137,9 +137,11 @@ file_name <- function(x, table_name, conn, column = FALSE){
   ext <- flob_ext(get_flobs(x, table_name, conn))
   if(column){
     flobs <- get_column_flobs(x, table_name, conn)
-    print(flob_ext(flobs))
-    ext <- flob_ext(flobs)
-    print(ext)
+    if(length(flobs) > 1){
+      ext <- "zip"
+    } else {
+      ext <- flob_ext(flobs)
+    }
   }
   glue("slobr-files_{Sys.Date()}.{ext}")
 }

@@ -18,8 +18,9 @@ instructions <- tagList(p(
 ), br(),
 h5("Read/delete files"), 
 p("Select one or more cells in the table and click 'read cell(s)' or 
-'delete cell(s)' to read or delete just those cells.
-          Click 'read column' or 'delete column' to read or delete all files
+'delete cell(s)' in the sidebar to read or delete just those cells.
+          Click 'read column(s)' or 'delete column(s)'
+          to read or delete all files
   in the columns containing the selected cells."),
 br(),
 h5("Write files"), 

@@ -1,15 +1,9 @@
-pool_open <- function(path){
+db_connect <- function(path){
   if(is.null(path)) return(NULL)
-  pool::dbPool(
+  DBI::dbConnect(
     drv = RSQLite::SQLite(),
-    dbname = path
+    path
   )
-}
-
-pool_close <- function(conn){
-  onStop(function() {
-    pool::poolClose(conn)
-  })
 }
 
 table_names <- function(conn){

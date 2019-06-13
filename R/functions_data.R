@@ -67,7 +67,7 @@ get_files_table <- function(table_name, conn){
   blob_cols <- blob_columns(table_name, conn)
   x <- matrix(c(rep(1, length(blob_cols)), blob_cols -1), 
                 ncol = 2, byrow = FALSE)
-  get_files(x, table_name, conn)
+  get_files(x, table_name, conn, by_column = TRUE)
 }
 
 send_flob <- function(x, table_name, conn, path){

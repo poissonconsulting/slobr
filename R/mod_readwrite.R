@@ -83,7 +83,7 @@ mod_readwrite_ui <- function(id){
 
 mod_readwrite_server <- function(input, output, session){
   
-  options(shiny.maxRequestSize = 2000*1024^2)
+  options(shiny.maxRequestSize = 3000*1024^2)
   ns <- session$ns 
   
   path <- getShinyOption("path")

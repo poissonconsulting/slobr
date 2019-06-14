@@ -82,7 +82,9 @@ mod_readwrite_ui <- function(id){
 #' @keywords internal
 
 mod_readwrite_server <- function(input, output, session){
-  ns <- session$ns
+  
+  options(shiny.maxRequestSize = 2000*1024^2)
+  ns <- session$ns 
   
   path <- getShinyOption("path")
   

@@ -44,7 +44,7 @@ DBI::dbWriteTable(conn, "Table2", df, overwrite = TRUE)
 
 write.csv(data.frame(x = 1), "~/Poisson/Code/slobr/slobr/inst/extdata/df.csv")
 flob2 <- flobr::flob("~/Poisson/Code/slobr/slobr/inst/extdata/df.csv")
-flob3 <- flobr::flob("~/Poisson/Code/slobr/slobr/inst/extdata/file.jpg")
+flob3 <- flobr::flob("~/Poisson/Code/slobr/slobr/inst/extdata/file.jpg", name = "profile")
 flob4 <- flobr::flob("~/Poisson/Code/slobr/slobr/inst/extdata/test.xlsx")
 
 dbflobr::write_flob(flobr::flob_obj, "flob", "Table1", key = data.frame(int = 1L), 

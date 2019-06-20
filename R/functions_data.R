@@ -38,6 +38,10 @@ key_matrix <- function(x, table_name, conn){
   })
 }
 
+# colname_matrix <- function(x, table_name, conn){
+#   
+# }
+
 get_flobs <- function(x, table_name, conn, by_column = FALSE){
   if(by_column){
     x <- column_matrix(x, table_name, conn)
@@ -58,8 +62,9 @@ get_files <- function(x, table_name, conn, by_column = FALSE){
   flobs <- get_flobs(x, table_name, conn, by_column)
   sapply(seq_along(flobs), function(x) {
     y <- flobs[[x]]
+    name <- flobr::flob_name(y)
     ext <- flobr::flob_ext(y)
-    flobr::unflob(y, paste0("file_", x,".", ext))
+    flobr::unflob(y, paste0(name, ".", ext))
   }, USE.NAMES = FALSE)
 }
 
@@ -95,16 +100,23 @@ delete_flob <- function(x, table_name, conn, by_column = FALSE){
 file_name <- function(x, table_name, conn, by_column = FALSE){
   flobs <- get_flobs(x, table_name, conn, by_column)
   if(length(flobs) > 1)
-    return(glue("slobr-files_{Sys.Date()}.zip"))
-  ext <- flob_ext(flobs)
-  glue("slobr-files_{Sys.Date()}.{ext}")
+    return(glue("{table_name}-.zip"))
+  flob <- flobs[[1]]
+  ext <- flobr::flob_ext(flob)
+  name <- flobr::flob_name(flob)
+  glue("{name}.{ext}")
 }
 
 download_file <- function(x, table_name, conn, path, by_column = FALSE){
-  files <- get_files(x, table_name, conn, by_column)
-  if(length(files) > 1)
-    return(zip(path, files))
-  file.copy(files, path)
+  flobs <- get_flobs(x, table_name, conn, by_column)
+  if(length(flobs) > 1)
+    return({
+      files <- get_files(x, table_name, conn, by_column = FALSE)
+      zip(path, files)
+      unlink(files)
+      })
+  flob <- flobs[[1]]         
+  flobr::unflob(flob, path)
 }
 
 add_column <- function(column_name, table_name, conn){

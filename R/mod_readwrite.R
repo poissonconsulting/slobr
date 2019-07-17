@@ -179,7 +179,7 @@ mod_readwrite_server <- function(input, output, session){
   observeEvent(input$read_column, {
     x <- input$table_cells_selected
     y <- read_modal(x, input$table_name, 
-                    conn = rv$conn, by_column = TRUE)
+                    conn = rv$conn, by = "column")
     if(!isTRUE(y)){
       return(showModal(y))
     }
@@ -190,12 +190,12 @@ mod_readwrite_server <- function(input, output, session){
   output$read_column_handler <- downloadHandler(
     filename = function(){
       file_name(input$table_cells_selected,
-                input$table_name, rv$conn, by_column = TRUE)
+                input$table_name, rv$conn, by = "column")
     },
     content = function(path){
       download_file(input$table_cells_selected,
                     input$table_name, rv$conn,
-                    path, by_column = TRUE)
+                    path, by = "column")
     },
     contentType = "application/zip"
   )
@@ -207,13 +207,13 @@ mod_readwrite_server <- function(input, output, session){
   
   output$read_table_handler <- downloadHandler(
     filename = function(){
-      glue("slobr-files_{Sys.Date()}.zip")
+      file_name(input$table_cells_selected,
+                input$table_name, rv$conn, by = "table")
     },
     content = function(path){
-      table_name <- input$table_name
-      files <- get_files_table(table_name, rv$conn)
-      print(files)
-      zip(path, files)
+      download_file(input$table_cells_selected,
+                    input$table_name, rv$conn,
+                    path, by = "table")
     },
     contentType = "application/zip"
   )
@@ -235,7 +235,7 @@ mod_readwrite_server <- function(input, output, session){
     y <- delete_modal(x, input$table_name, rv$conn)
     if(isTRUE(y)){
       return({
-        delete_flob(x, input$table_name, rv$conn, by_column = TRUE)
+        delete_flob(x, input$table_name, rv$conn, by = "column")
         rv$table <- table_read(input$table_name, rv$conn)
       })
     }

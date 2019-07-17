@@ -17,8 +17,7 @@ app_ui <- function() {
                         mod_readwrite_ui("readwrite_ui_1")),
                tabPanel(title = "About",
                         shinyutils::mod_about_ui("about_ui_1", package = "slobr", 
-                                                 citation = tagList(p("")),
-                                                 footer = tagList(p("Developed by Poisson Consulting Ltd."))))
+                                                 citation = tagList(p(""))))
                )
   )
 }

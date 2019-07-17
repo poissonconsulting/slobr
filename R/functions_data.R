@@ -24,6 +24,23 @@ column_matrix <- function(x, table_name, conn){
   }))
 }
 
+table_matrix <- function(table_name, conn){
+  table <- table_read(table_name, conn)
+  columns <- blob_columns(table_name, conn)
+  y <- nrow(table)
+  z <- do.call(rbind, lapply(columns, function(x){
+    matrix(c(1:y, rep(x, y)), ncol = 2, byrow = FALSE)
+  }))
+  z
+}
+
+get_matrix <- function(x, table_name, conn, by = FALSE){
+  switch(by,
+         column = column_matrix(x, table_name, conn),
+         table =  table_matrix(table_name, conn),
+         x)
+}
+
 key_matrix <- function(x, table_name, conn){
   if(length(x) == 0) return()
   table <- table_read(table_name, conn)
@@ -32,21 +49,16 @@ key_matrix <- function(x, table_name, conn){
     z <- x[y,]
     row <- z[1]
     list(
-      column_name = names(table)[z[2] + 1],
+      column_name = names(table)[z[2]],
       key = table[row, -blob_cols]
     )
   })
 }
 
-# colname_matrix <- function(x, table_name, conn){
-#   
-# }
-
-get_flobs <- function(x, table_name, conn, by_column = FALSE){
-  if(by_column){
-    x <- column_matrix(x, table_name, conn)
-  }
+get_flobs <- function(x, table_name, conn, by = "cell"){
+  x <- get_matrix(x, table_name, conn, by)
   key <- key_matrix(x, table_name, conn)
+  print(key)
   y <- lapply(key, function(x) {
     key <- x$key
     column_name <- x$column_name
@@ -55,24 +67,8 @@ get_flobs <- function(x, table_name, conn, by_column = FALSE){
       return(NULL)
     y
   }) 
+  names(y) <- sapply(key, function(x) x$column_name)
   rm_null(y)
-}
-
-get_files <- function(x, table_name, conn, by_column = FALSE){
-  flobs <- get_flobs(x, table_name, conn, by_column)
-  sapply(seq_along(flobs), function(x) {
-    y <- flobs[[x]]
-    name <- flobr::flob_name(y)
-    ext <- flobr::flob_ext(y)
-    flobr::unflob(y, paste0(name, ".", ext))
-  }, USE.NAMES = FALSE)
-}
-
-get_files_table <- function(table_name, conn){
-  blob_cols <- blob_columns(table_name, conn)
-  x <- matrix(c(rep(1, length(blob_cols)), blob_cols -1), 
-                ncol = 2, byrow = FALSE)
-  get_files(x, table_name, conn, by_column = TRUE)
 }
 
 send_flob <- function(x, table_name, conn, path){
@@ -85,10 +81,8 @@ send_flob <- function(x, table_name, conn, path){
                       conn = conn, exists = TRUE), silent = TRUE)
 }
 
-delete_flob <- function(x, table_name, conn, by_column = FALSE){
-  if(by_column){
-    x <- column_matrix(x, table_name, conn)
-  }
+delete_flob <- function(x, table_name, conn, by = "cell"){
+  x <- get_matrix(x, table_name, conn, by)
   key <- key_matrix(x, table_name, conn)
   y <- lapply(key, function(x) {
     key <- x$key
@@ -97,23 +91,30 @@ delete_flob <- function(x, table_name, conn, by_column = FALSE){
   }) 
 }
 
-file_name <- function(x, table_name, conn, by_column = FALSE){
-  flobs <- get_flobs(x, table_name, conn, by_column)
+file_name <- function(x, table_name, conn, by = "cell"){
+  flobs <- get_flobs(x, table_name, conn, by)
   if(length(flobs) > 1)
-    return(glue("{table_name}-.zip"))
+    return(glue("{table_name}.zip"))
   flob <- flobs[[1]]
   ext <- flobr::flob_ext(flob)
   name <- flobr::flob_name(flob)
   glue("{name}.{ext}")
 }
 
-download_file <- function(x, table_name, conn, path, by_column = FALSE){
-  flobs <- get_flobs(x, table_name, conn, by_column)
+download_file <- function(x, table_name, conn, path, by = "cell"){
+  flobs <- get_flobs(x, table_name, conn, by)
   if(length(flobs) > 1)
     return({
-      files <- get_files(x, table_name, conn, by_column = FALSE)
-      zip(path, files)
-      unlink(files)
+      for(i in unique(names(flobs))){
+        dir.create(i)
+      }
+      for(i in flobs){
+        flobr::unflob(i, file.path(names(i), flobr::flob_name(i)))
+      }
+      zip(path, names(flobs))
+      for(i in names(flobs)){
+        unlink(i, recursive = TRUE)
+      }
       })
   flob <- flobs[[1]]         
   flobr::unflob(flob, path)

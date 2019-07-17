@@ -2,7 +2,7 @@
 app_ui <- function() {
   tagList(
     # shinyutils::css_body(),
-    shinyutils::css_navbar(),
+    shinyutils::css_navbar(text_selected_color = "#5bc0de"),
     use_bs_tooltip(),
     tags$head(tags$script(HTML('
                            Shiny.addCustomMessageHandler("jsCode",

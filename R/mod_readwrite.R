@@ -250,7 +250,8 @@ mod_readwrite_server <- function(input, output, session){
   observeEvent(input$write, {
     x <- input$table_cells_selected
     path <- input$file$datapath
-    send_flob(x, input$table_name, rv$conn, path)
+    name <- rm_ext(input$file$name)
+    send_flob(x, input$table_name, rv$conn, path, name)
     rv$table <- table_read(input$table_name, rv$conn)
     reset('file')
   })

@@ -71,10 +71,10 @@ get_flobs <- function(x, table_name, conn, by = "cell"){
   rm_null(y)
 }
 
-send_flob <- function(x, table_name, conn, path){
+send_flob <- function(x, table_name, conn, path, name){
   if(nrow(x) > 1) return()
   key <- key_matrix(x, table_name, conn)[[1]]
-  flob <- flobr::flob(path)
+  flob <- flobr::flob(path, name = name)
   try(dbflobr::write_flob(flob, column_name = key$column_name, 
                       table_name = table_name, 
                       key = key$key, 

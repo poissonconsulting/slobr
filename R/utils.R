@@ -13,4 +13,6 @@ is_err <- function(x) inherits(x, "try-error")
 
 rm_null <- function(x) x[lengths(x) != 0]
 
+rm_ext <- function(x) sub(pattern = "(.*?)\\..*$", replacement = "\\1", x)
+
 br2 <- function() tagList(br(), br())

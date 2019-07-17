@@ -26,7 +26,8 @@ column_matrix <- function(x, table_name, conn){
 
 table_matrix <- function(table_name, conn){
   table <- table_read(table_name, conn)
-  columns <- blob_columns(table_name, conn)
+  # other datatable column indices start at 0
+  columns <- blob_columns(table_name, conn) - 1
   y <- nrow(table)
   z <- do.call(rbind, lapply(columns, function(x){
     matrix(c(1:y, rep(x, y)), ncol = 2, byrow = FALSE)
@@ -49,7 +50,7 @@ key_matrix <- function(x, table_name, conn){
     z <- x[y,]
     row <- z[1]
     list(
-      column_name = names(table)[z[2]],
+      column_name = names(table)[z[2] + 1],
       key = table[row, -blob_cols]
     )
   })
@@ -58,7 +59,6 @@ key_matrix <- function(x, table_name, conn){
 get_flobs <- function(x, table_name, conn, by = "cell"){
   x <- get_matrix(x, table_name, conn, by)
   key <- key_matrix(x, table_name, conn)
-  print(key)
   y <- lapply(key, function(x) {
     key <- x$key
     column_name <- x$column_name

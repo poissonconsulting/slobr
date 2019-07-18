@@ -5,6 +5,12 @@
 
 [![Lifecycle:
 experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://www.tidyverse.org/lifecycle/#experimental)
+[![Travis build
+status](https://travis-ci.org/poissonconsulting/slobr.svg?branch=master)](https://travis-ci.org/poissonconsulting/slobr)
+[![AppVeyor build
+status](https://ci.appveyor.com/api/projects/status/github/poissonconsulting/slobr?branch=master&svg=true)](https://ci.appveyor.com/project/poissonconsulting/slobr)
+[![Codecov test
+coverage](https://codecov.io/gh/poissonconsulting/slobr/branch/master/graph/badge.svg)](https://codecov.io/gh/poissonconsulting/slobr?branch=master)
 <!-- badges: end -->
 
 # slobr
@@ -18,17 +24,14 @@ A flob is a special type of BLOB that includes the file extension type.
 To install the latest development version from
 [GitHub](https://github.com/poissonconsulting/slobr)
 
-    # install.packages("devtools")
-    devtools::install_github("poissonconsulting/checkr")
-    devtools::install_github("poissonconsulting/shinyutils")
-    devtools::install_github("poissonconsulting/flobr")
-    devtools::install_github("poissonconsulting/dbflobr")
-    devtools::install_github("poissonconsulting/slobr")
+    remotes::install_github("poissonconsulting/shinyutils")
+    remotes::install_github("poissonconsulting/flobr")
+    remotes::install_github("poissonconsulting/dbflobr")
+    remotes::install_github("poissonconsulting/slobr")
 
 To install the latest development version from the Poisson
 [drat](https://github.com/poissonconsulting/drat) repository.
 
-    # install.packages("drat")
     drat::addRepo("poissonconsulting")
     install.packages("slobr")
 
@@ -39,14 +42,6 @@ library(slobr)
 # to run with a demo database
 slobr::run_app("demo")
 ```
-
-<!-- ## Citation -->
-
-<!-- ```{r, comment="", echo=FALSE} -->
-
-<!-- citation(package = "dbflobr") -->
-
-<!-- ``` -->
 
 ## Contribution
 

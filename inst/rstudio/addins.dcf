@@ -1,0 +1,4 @@
+Name: Run slobr app
+Description: Run slobr app.
+Binding: slobr_addin
+Interactive: true

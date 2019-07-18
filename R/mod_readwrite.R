@@ -97,11 +97,17 @@ mod_readwrite_server <- function(input, output, session){
     if(!is.null(rv$table)){
       shinyjs::show("div_output")
       shinyjs::show("div_input")
-      shinyjs::hide("div_dbhelp")
     } else {
       shinyjs::hide("div_output")
       shinyjs::hide("div_input")
+    }
+  })
+  
+  observe({
+    if(is.null(rv$table) && !is.null(input$dbpath)){
       shinyjs::show("div_dbhelp")
+    } else {
+      shinyjs::hide("div_dbhelp")
     }
   })
   

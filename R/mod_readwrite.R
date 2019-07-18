@@ -151,7 +151,9 @@ mod_readwrite_server <- function(input, output, session){
     flob_datatable(rv$table, input$table_name, rv$conn, ns = ns)
   })
   
-  output$table <- DT::renderDT({data_table()})
+  output$table <- DT::renderDT({
+    data_table()
+    })
   
   observeEvent(input$read, {
     x <- input$table_cells_selected
@@ -244,7 +246,7 @@ mod_readwrite_server <- function(input, output, session){
 
   observeEvent(input$init_write, {
     x <- input$table_cells_selected
-    showModal(write_modal(x, ns = ns))
+    showModal(write_modal(x, input$table_name, rv$conn, ns = ns))
   })
 
   observeEvent(input$write, {

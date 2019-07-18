@@ -71,9 +71,18 @@ modal <- function(x, footer = NULL, title = "oops..."){
   )
 }
 
-write_modal <- function(x, ns){
+write_modal <- function(x, table_name, conn, ns){
   msg1 <- "Please select only one cell"
   msg2 <- "Please select at least one cell"
+  msg3 <- "Please select a cell from a BLOB column"
+  
+  column_name <- column_names(table_name, conn)[x[2] + 1]
+  is_blob <- is_column_blob(column_name = column_name, 
+                      table_name = table_name, 
+                      conn = conn)
+  if(!is_blob){
+    return(modal(msg3))
+  }
   if(nrow(x) == 0){
     return(modal(msg2))
   }

@@ -1,5 +1,4 @@
 flob_datatable <- function(table, table_name, conn, ns){
-  table <- table
   blob_cols <- blob_columns(table_name, conn)
   for(i in blob_cols){
     flobs <- table[[i]]

@@ -6,10 +6,16 @@ flob_datatable <- function(table, table_name, conn, ns){
     ext <- flob_exts(flobs)
     table[i] <- cell_display(ext)
   }
+  
+  sfc_cols <- sfc_columns(table_name, conn)
+  column_names <- column_names(table_name, conn)
+  cols <- which(toupper(column_names) %in% sfc_cols)
+  table[,cols] <- "< GEOMETRY >"
+  
   DT::datatable(table, escape = FALSE, selection = list(mode = "multiple",
                                                         target = 'cell'),
                 rownames = FALSE,  class = 'cell-border compact', 
-                options = list(dom = "t", ordering = TRUE, 
+                options = list(ordering = TRUE, 
                                autowidth = FALSE, scrollX = TRUE, 
                                columnDefs = list(list(className = 'dt-center', 
                                                       targets = "_all"))
@@ -82,26 +88,26 @@ write_modal <- function(x, ns){
   
 }
 
-read_modal <- function(x, table_name, conn, by_column = FALSE){
+read_modal <- function(x, table_name, conn, by = "cell"){
   msg1 <- "Please select at least one cell"
   msg2 <- "There isn't a file there!"
   if(nrow(x) == 0){
     return(modal(msg1))
   }
-  y <- get_flobs(x, table_name, conn, by_column)
+  y <- get_flobs(x, table_name, conn, by)
   if(!length(y))
     return(modal(msg2))
   TRUE
 }
 
-delete_modal <- function(x, table_name, conn, by_column = FALSE){
+delete_modal <- function(x, table_name, conn, by = "cell"){
   msg1 <- "Please select at least one cell"
   msg2 <- "There isn't a file there!"
   
   if(nrow(x) == 0){
     return(modal(msg1))
   }
-  y <- get_flobs(x, table_name, conn, by_column)
+  y <- get_flobs(x, table_name, conn, by)
   if(!length(y))
     return(modal(msg2))
   TRUE

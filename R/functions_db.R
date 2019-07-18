@@ -17,6 +17,8 @@ column_names <- function(table_name, conn) {
 
 table_read <- function(table_name, conn){
   if(is.null(conn)) return(NULL)
+  # n <- DBI::dbGetQuery(conn, "SELECT COUNT(*) FROM Table1")[[1]]
+
   DBI::dbReadTable(conn, name = table_name)
 }
 
@@ -47,10 +49,23 @@ is_column_blob <- function(column_name, table_name, conn) {
   toupper(table_column_type(column_name, table_name, conn)) == "BLOB"
 }
 
+sfc_columns <- function(table_name, conn){
+  has_meta <- "readwritesqlite_meta" %in% table_names(conn)
+  if(isTRUE(has_meta)){
+    return({
+      meta <- table_read("readwritesqlite_meta", conn)
+      meta <- meta[meta$TableMeta == toupper(table_name),]
+      meta$ColumnMeta[grepl("^proj:", meta$MetaMeta)]
+    })
+  }
+  NULL
+}
+
 blob_columns <- function(table_name, conn){
   cols <- column_names(table_name, conn)
+  sfc_cols <- sfc_columns(table_name, conn)
   which(sapply(cols, USE.NAMES = FALSE, function(x){
-    is_column_blob(x, table_name, conn)
+    is_column_blob(x, table_name, conn) && !(toupper(x) %in% sfc_cols)
   }))
 }
 

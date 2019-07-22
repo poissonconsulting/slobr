@@ -3,6 +3,7 @@ app_ui <- function() {
   tagList(
     # shinyutils::css_body(),
     shinyutils::css_navbar(text_selected_color = "#5bc0de"),
+    shinyutils::css_hide_errors(),
     use_bs_tooltip(),
     tags$head(tags$script(HTML('
                            Shiny.addCustomMessageHandler("jsCode",

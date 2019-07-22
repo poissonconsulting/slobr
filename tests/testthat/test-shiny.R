@@ -26,7 +26,7 @@ test_that("shiny functions work", {
   x <- info_tooltip(label_container("a"), "yup")
   expect_is(x, "shiny.tag")
   
-  mat <- matrix(c(1, 2), ncol = 2, byrow = FALSE)
+  mat <- matrix(c(3, 2), ncol = 2, byrow = FALSE)
 
   x <- write_modal(mat, "Table1", conn, shiny::NS("yup"))
   expect_is(x, "shiny.tag")

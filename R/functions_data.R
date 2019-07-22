@@ -67,6 +67,7 @@ get_flobs <- function(x, table_name, conn, by = "cell"){
       return(NULL)
     y
   }) 
+  
   names(y) <- sapply(key, function(x) x$column_name)
   rm_null(y)
 }

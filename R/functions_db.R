@@ -17,8 +17,6 @@ column_names <- function(table_name, conn) {
 
 table_read <- function(table_name, conn){
   if(is.null(conn)) return(NULL)
-  # n <- DBI::dbGetQuery(conn, "SELECT COUNT(*) FROM Table1")[[1]]
-
   DBI::dbReadTable(conn, name = table_name)
 }
 

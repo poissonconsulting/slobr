@@ -6,8 +6,8 @@ test_that("data functions work", {
   expect_identical(flob_ext("nope"), "empty")
   expect_identical(flob_exts(c(flob, flob)), c("pdf", "pdf"))
   
-  mat <- matrix(c(1, 2), ncol = 2, byrow = FALSE)
-  mat2 <- matrix(c(1:2, rep(2, 2)), ncol = 2, byrow = FALSE)
+  mat <- matrix(c(3, 2), ncol = 2, byrow = FALSE)
+  mat2 <- matrix(c(2:3, rep(2, 2)), ncol = 2, byrow = FALSE)
   
   x <- column_matrix(mat2, "Table1", conn)
   expect_is(x, "matrix")
@@ -32,7 +32,7 @@ test_that("data functions work", {
   
   expect_is(flobs[[1]], c("flob", "blob"))
   names(flob) <- "flob"
-  expect_equal(flobs[[1]], flob)
+  expect_equal(flobs[[2]], flob)
   
   x <- paste(file_name(mat, "Table1", conn, by = "cell"))
   expect_identical("flobr.pdf", x)

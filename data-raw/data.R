@@ -1,3 +1,6 @@
+library(shiny)
+library(glue)
+
 file_types <- list(
   xl = list(ext = c("xls", "xlsx"), icon = "file-excel"),
   ms = list(ext = c("doc", "docx"), icon = "file-word"),
@@ -33,10 +36,11 @@ conn <- DBI::dbConnect(RSQLite::SQLite(), "~/Poisson/Code/slobr/slobr/inst/extda
 df <- data.frame(char = c("a", "b", "b"),
                  num = c(1.1, 2.2, 2.2),
                  key = c(1, 2, 3),
+                 null = NA_character_,
                  stringsAsFactors = FALSE)
 
-df2 <- data.frame(char = c("a", "b", "b"),
-                 int = c(1L, 2L, 3L),
+df2 <- data.frame(char = c("a", "b", "c"),
+                 int = c(1L, 2L, 2L),
                  stringsAsFactors = FALSE)
 
 DBI::dbWriteTable(conn, "Table1", df2, overwrite = TRUE)
@@ -47,19 +51,22 @@ flob2 <- flobr::flob("~/Poisson/Code/slobr/slobr/inst/extdata/df.csv")
 flob3 <- flobr::flob("~/Poisson/Code/slobr/slobr/inst/extdata/file.jpg", name = "profile")
 flob4 <- flobr::flob("~/Poisson/Code/slobr/slobr/inst/extdata/test.xlsx")
 
-dbflobr::write_flob(flobr::flob_obj, "flob", "Table1", key = data.frame(int = 1L), 
+dbflobr::write_flob(flobr::flob_obj, "flob", "Table1", 
+                    key = data.frame(int = 2L, char = "c", 
+                                     stringsAsFactors = FALSE), 
                     conn = conn, exists = FALSE)
 
-dbflobr::write_flob(flob2, "flob", "Table1", key = data.frame(int = 2L), 
+dbflobr::write_flob(flob2, "flob", "Table1", 
+                    key = data.frame(int = 2L, char = "b", 
+                                     stringsAsFactors = FALSE), 
                     conn = conn, exists = TRUE)
 
 dbflobr::write_flob(flob2, "flob2", "Table1", key = data.frame(int = 1L), 
                     conn = conn, exists = FALSE)
 
-dbflobr::write_flob(flob3, "flob2", "Table1", key = data.frame(int = 2L), 
-                    conn = conn, exists = TRUE)
-
-dbflobr::write_flob(flob4, "flob2", "Table1", key = data.frame(int = 3L), 
+dbflobr::write_flob(flob3, "flob2", "Table1", 
+                    key = data.frame(int = 2L, char = "c", 
+                                     stringsAsFactors = FALSE), 
                     conn = conn, exists = TRUE)
 
 DBI::dbDisconnect(conn)

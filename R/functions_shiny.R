@@ -97,8 +97,9 @@ write_modal <- function(x, table_name, conn, ns){
 }
 
 read_modal <- function(x, table_name, conn, by = "cell"){
-  msg1 <- "Please select at least one cell"
-  msg2 <- "There isn't a file there!"
+  msg1 <- "Please select at least one cell."
+  msg2 <- "There is either no file there, or we are unable to read it from the 
+  database."
   if(nrow(x) == 0){
     return(modal(msg1))
   }

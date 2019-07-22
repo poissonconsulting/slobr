@@ -259,9 +259,14 @@ mod_readwrite_server <- function(input, output, session){
     x <- input$table_cells_selected
     path <- input$file$datapath
     name <- rm_ext(input$file$name)
-    send_flob(x, input$table_name, rv$conn, path, name)
-    rv$table <- table_read(input$table_name, rv$conn)
-    reset('file')
+    tmp <- send_flob(x, input$table_name, rv$conn, path, name)
+    if(isTRUE(tmp)){
+      rv$table <- table_read(input$table_name, rv$conn)
+      reset('file')
+      removeModal()
+    } else {
+      showModal(modal(tags$p("There was a problem writing that file to the database.")))
+    }
   })
 
   observeEvent(input$init_add_column, {

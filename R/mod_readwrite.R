@@ -63,7 +63,7 @@ mod_readwrite_ui <- function(id){
             label_container("Select cell(s) to read/write/delete file(s)") %>%
               info_modal(ns("modal_info")),
             wellPanel(style = "overflow-y:scroll; max-height: 600px",
-                      DT::DTOutput(ns("table")))
+                      shinycssloaders::withSpinner(DT::DTOutput(ns("table"))))
           )
         ),
         downloadButton(ns("read_handler"), label = NULL,

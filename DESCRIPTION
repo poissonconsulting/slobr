@@ -16,7 +16,8 @@ Imports:
     shinyutils,
     DT,
     bsplus,
-    shinyjs
+    shinyjs,
+    shinycssloaders
 Suggests: 
     testthat (>= 2.1.0),
     covr

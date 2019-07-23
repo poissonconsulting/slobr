@@ -127,7 +127,7 @@ add_column_modal <- function(ns){
     bsplus::use_bs_tooltip(),
     modal(
       textInput(ns("add_column_name"), label = "New column name", placeholder = "NewColumn") %>%
-        info_tooltip("Column name cannot include spaces and cannot already exist in the table."),
+        info_tooltip("Column name cannot include spaces and cannot already exist in the table (case-insensitive)."),
       title = NULL,
       actionButton(ns("add_column"), label = "add column", 
                    icon = icon("table"))

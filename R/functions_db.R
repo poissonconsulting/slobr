@@ -69,5 +69,5 @@ blob_columns <- function(table_name, conn){
 
 column_exists <- function(x, table_name, conn){
   column_names <- column_names(table_name, conn)
-  x %in% column_names
+  toupper(x) %in% toupper(column_names)
 }

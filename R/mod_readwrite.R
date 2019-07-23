@@ -279,6 +279,7 @@ mod_readwrite_server <- function(input, output, session){
                              rv$conn)
     rv$table <- table_read(input$table_name, rv$conn)
     reset('add_column_name')
+    removeModal()
   })
   
 }

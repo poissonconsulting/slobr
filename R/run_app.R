@@ -1,6 +1,7 @@
 #' Run the Shiny Application
 #'
-#' @param path A path to SQLite database. Use "demo" to load demo database.
+#' @param path A path to SQLite database, or "demo" to load demo database, or NULL 
+#' to load the app without a database.
 #' @export
 #' @importFrom shiny runApp
 run_app <- function(path = NULL) {

@@ -28,7 +28,6 @@ A flob is a special type of BLOB that includes the file extension type.
 
 To install the latest development version from [GitHub](https://github.com/poissonconsulting/slobr)
 ```
-remotes::install_github("poissonconsulting/shinyutils")
 remotes::install_github("poissonconsulting/flobr")
 remotes::install_github("poissonconsulting/dbflobr")
 remotes::install_github("poissonconsulting/slobr")

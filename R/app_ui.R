@@ -1,9 +1,8 @@
 #' @import shiny
 app_ui <- function() {
   tagList(
-    # shinyutils::css_body(),
-    shinyutils::css_navbar(text_selected_color = "#5bc0de"),
-    shinyutils::css_hide_errors(),
+    css_navbar(text_selected_color = "#5bc0de"),
+    css_hide_errors(),
     use_bs_tooltip(),
     tags$head(tags$script(HTML('
                            Shiny.addCustomMessageHandler("jsCode",
@@ -11,14 +10,12 @@ app_ui <- function() {
                            eval(message.value);
                            });'
     ))),
-    # shinyutils::css_hide_errors(),
     navbarPage(title = "slobr", 
                selected = "Read and Write Files", 
                tabPanel(title = "Read and Write Files",
                         mod_readwrite_ui("readwrite_ui_1")),
                tabPanel(title = "About",
-                        shinyutils::mod_about_ui("about_ui_1", package = "slobr", 
-                                                 citation = tagList(p(""))))
+                        mod_about_ui("about_ui_1"))
                )
   )
 }

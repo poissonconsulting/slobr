@@ -7,7 +7,8 @@
 run_app(path = NULL)
 }
 \arguments{
-\item{path}{A path to SQLite database. Use "demo" to load demo database.}
+\item{path}{A path to SQLite database, or "demo" to load demo database, or NULL
+to load the app without a database.}
 }
 \description{
 Run the Shiny Application

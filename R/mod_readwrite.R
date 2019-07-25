@@ -167,8 +167,7 @@ mod_readwrite_server <- function(input, output, session){
     if(!isTRUE(y)){
       return(showModal(y))
     }
-    js <- glue("document.getElementById('{ns('read_handler')}').click();")
-    shinyjs::runjs(js)
+    shinyjs::runjs(click_js(ns('read_handler')))
   })
 
   output$read_handler <- downloadHandler(
@@ -191,8 +190,7 @@ mod_readwrite_server <- function(input, output, session){
     if(!isTRUE(y)){
       return(showModal(y))
     }
-    js <- glue("document.getElementById('{ns('read_column_handler')}').click();")
-    shinyjs::runjs(js)
+    shinyjs::runjs(click_js(ns('read_column_handler')))
   })
 
   output$read_column_handler <- downloadHandler(
@@ -209,8 +207,7 @@ mod_readwrite_server <- function(input, output, session){
   )
   
   observeEvent(input$read_table, {
-    js <- glue("document.getElementById('{ns('read_table_handler')}').click();")
-    shinyjs::runjs(js)
+    shinyjs::runjs(click_js(ns('read_table_handler')))
   })
   
   output$read_table_handler <- downloadHandler(

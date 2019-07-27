@@ -1,10 +1,10 @@
 test_that("data functions work", {
-  flob <- flobr::flob_obj
+  flob <- flobr::flob(system.file("extdata/df.csv", package = "slobr"))
   conn <- db_connect(system.file("extdata", "demo_db.sqlite", package = "slobr")) 
   
-  expect_identical(flob_ext(flob), "pdf")
+  expect_identical(flob_ext(flob), "csv")
   expect_identical(flob_ext("nope"), "empty")
-  expect_identical(flob_exts(c(flob, flob)), c("pdf", "pdf"))
+  expect_identical(flob_exts(c(flob, flob)), c("csv", "csv"))
   
   mat <- matrix(c(3, 2), ncol = 2, byrow = FALSE)
   mat2 <- matrix(c(2:3, rep(2, 2)), ncol = 2, byrow = FALSE)
@@ -32,7 +32,7 @@ test_that("data functions work", {
   
   expect_is(flobs[[1]], c("flob", "blob"))
   names(flob) <- "flob"
-  expect_equal(flobs[[2]], flob)
+  expect_identical(flobs[[1]], flob)
   
   x <- paste(file_name(mat, "Table1", conn, by = "cell"))
   expect_identical("flobr.pdf", x)

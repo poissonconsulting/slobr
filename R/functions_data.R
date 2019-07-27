@@ -110,15 +110,23 @@ download_file <- function(x, table_name, conn, path, by = "cell"){
         dir.create(i)
       }
       for(i in flobs){
-        flobr::unflob(i, file.path(names(i), flobr::flob_name(i)))
+        flobr::unflob(i, dir = names(i), 
+                      name = flobr::flob_name(i),
+                      ext = flobr::flob_ext(i))
       }
       zip(path, names(flobs))
       for(i in names(flobs)){
         unlink(i, recursive = TRUE)
       }
       })
-  flob <- flobs[[1]]         
-  flobr::unflob(flob, path)
+  flob <- flobs[[1]]    
+  name <- basename(path)
+  ext <- tools::file_ext(path)
+  dir <- gsub(name, "", path)
+  flobr::unflob(flob, 
+                dir = dir,
+                name = rm_ext(name), 
+                ext = ext)
 }
 
 add_column <- function(column_name, table_name, conn){

@@ -1,14 +1,11 @@
 db_connect <- function(path){
   if(is.null(path)) return(NULL)
-  DBI::dbConnect(
-    drv = RSQLite::SQLite(),
-    path
-  )
+  readwritesqlite::rws_connect(path)
 }
 
 table_names <- function(conn){
   if(is.null(conn)) return(NULL)
-  DBI::dbListTables(conn)
+  readwritesqlite::rws_list_tables(conn)
 }
 
 column_names <- function(table_name, conn) {

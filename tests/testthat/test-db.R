@@ -2,6 +2,11 @@ test_that("db functions work", {
   conn <- db_connect(system.file("extdata", "demo_db.sqlite", package = "slobr"))
   expect_is(conn, "SQLiteConnection")
   
+  x <- DBI::dbListTables(conn)
+  expect_identical(x, c("Table1", "Table2",
+                        "readwritesqlite_init",
+                        "readwritesqlite_log",
+                        "readwritesqlite_meta"))
   expect_identical(table_names(conn), c("Table1", "Table2"))
   
   x <- column_names("Table1", conn)

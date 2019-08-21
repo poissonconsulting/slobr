@@ -5,7 +5,12 @@ db_connect <- function(path){
 
 table_names <- function(conn){
   if(is.null(conn)) return(NULL)
-  readwritesqlite::rws_list_tables(conn)
+  reserved <- c("readwritesqlite_log",
+                "readwritesqlite_meta",
+                "readwritesqlite_init")
+  tables <- DBI::dbListTables(conn)
+  tables <- tables[!to_upper(tables) %in% to_upper(reserved)]
+  sort(tables)
 }
 
 column_names <- function(table_name, conn) {

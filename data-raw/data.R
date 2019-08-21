@@ -1,5 +1,6 @@
 library(shiny)
 library(glue)
+library(readwritesqlite)
 
 file_types <- list(
   xl = list(ext = c("xls", "xlsx"), icon = "file-excel"),
@@ -31,6 +32,7 @@ p("To write a file, only one cell can be selected at at time. If a file already 
 
 usethis::use_data(file_types, instructions, internal = TRUE, overwrite = TRUE)
 
+unlink("~/Poisson/Code/slobr/slobr/inst/extdata/demo_db.sqlite")
 conn <- DBI::dbConnect(RSQLite::SQLite(), "~/Poisson/Code/slobr/slobr/inst/extdata/demo_db.sqlite")
 
 df <- data.frame(char = c("a", "b", "b"),
@@ -43,8 +45,8 @@ df2 <- data.frame(char = c("a", "b", "c"),
                  int = c(1L, 2L, 2L),
                  stringsAsFactors = FALSE)
 
-DBI::dbWriteTable(conn, "Table1", df2, overwrite = TRUE)
-DBI::dbWriteTable(conn, "Table2", df, overwrite = TRUE)
+readwritesqlite::rws_write(df2, x_name = "Table1", conn = conn, exists = FALSE, replace = TRUE)
+readwritesqlite::rws_write(df, x_name = "Table2", conn = conn, exists = FALSE, replace = TRUE)
 
 write.csv(data.frame(x = 1), "~/Poisson/Code/slobr/slobr/inst/extdata/df.csv")
 flob2 <- flobr::flob("~/Poisson/Code/slobr/slobr/inst/extdata/df.csv")

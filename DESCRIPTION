@@ -16,11 +16,11 @@ Imports:
     DT,
     bsplus,
     shinyjs,
-    shinycssloaders,
-    readwritesqlite
+    shinycssloaders
 Suggests: 
     testthat (>= 2.1.0),
-    covr
+    covr,
+    readwritesqlite
 Remotes:
     poissonconsulting/dbflobr,
     poissonconsulting/flobr

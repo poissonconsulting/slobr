@@ -100,6 +100,14 @@ read_modal <- function(x, table_name, conn, by = "cell"){
   msg1 <- "Please select at least one cell."
   msg2 <- "There is either no file there, or we are unable to read it from the 
   database."
+  msg3 <- "There are no files to read."
+  
+  if(by == "table"){
+    y <- get_flobs(x, table_name, conn, by)
+    if(!length(y))
+      return(modal(msg3))
+    return(TRUE)
+  }
   if(nrow(x) == 0){
     return(modal(msg1))
   }

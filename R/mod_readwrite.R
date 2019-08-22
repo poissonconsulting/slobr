@@ -207,6 +207,12 @@ mod_readwrite_server <- function(input, output, session){
   )
   
   observeEvent(input$read_table, {
+    x <- input$table_cells_selected
+    y <- read_modal(x, input$table_name, 
+                    conn = rv$conn, by = "table")
+    if(!isTRUE(y)){
+      return(showModal(y))
+    }
     shinyjs::runjs(click_js(ns('read_table_handler')))
   })
   
@@ -237,7 +243,7 @@ mod_readwrite_server <- function(input, output, session){
 
   observeEvent(input$delete_column, {
     x <- input$table_cells_selected
-    y <- delete_modal(x, input$table_name, rv$conn)
+    y <- delete_modal(x, input$table_name, rv$conn, by = "column")
     if(isTRUE(y)){
       return({
         delete_flob(x, input$table_name, rv$conn, by = "column")

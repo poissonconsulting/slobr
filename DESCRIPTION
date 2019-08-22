@@ -19,8 +19,7 @@ Imports:
     shinycssloaders
 Suggests: 
     testthat (>= 2.1.0),
-    covr,
-    readwritesqlite
+    covr
 Remotes:
     poissonconsulting/dbflobr,
     poissonconsulting/flobr

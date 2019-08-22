@@ -12,14 +12,17 @@ knitr::opts_chunk$set(
   out.width = "100%"
 )
 ```
+# slobr
+
 <!-- badges: start -->
 [![Lifecycle: experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://www.tidyverse.org/lifecycle/#experimental)
 [![Travis build status](https://travis-ci.org/poissonconsulting/slobr.svg?branch=master)](https://travis-ci.org/poissonconsulting/slobr)
 [![AppVeyor build status](https://ci.appveyor.com/api/projects/status/github/poissonconsulting/slobr?branch=master&svg=true)](https://ci.appveyor.com/project/poissonconsulting/slobr)
 [![Codecov test coverage](https://codecov.io/gh/poissonconsulting/slobr/branch/master/graph/badge.svg)](https://codecov.io/gh/poissonconsulting/slobr?branch=master)
-<!-- badges: end -->
-
-# slobr
+[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT)
+[![Tinyverse status](https://tinyverse.netlify.com/badge/slobr)](https://CRAN.R-project.org/package=slobr)
+[![CRAN status](https://www.r-pkg.org/badges/version/slobr)](https://cran.r-project.org/package=slobr)
+<!-- ![CRAN downloads](http://cranlogs.r-pkg.org/badges/slobr) -->
 
 `slobr` is a Shiny app to read and write files to SQLite databases as [flobs](https://poissonconsulting.github.io/flobr/reference/flob.html).
 A flob is a special type of BLOB that includes the file extension type.
@@ -28,6 +31,7 @@ A flob is a special type of BLOB that includes the file extension type.
 
 To install the latest development version from [GitHub](https://github.com/poissonconsulting/slobr)
 ```
+# install.packages("remotes")
 remotes::install_github("poissonconsulting/flobr")
 remotes::install_github("poissonconsulting/dbflobr")
 remotes::install_github("poissonconsulting/slobr")
@@ -38,7 +42,8 @@ To install the latest development version from the Poisson [drat](https://github
 drat::addRepo("poissonconsulting")
 install.packages("slobr")
 ```
-## Usage
+
+## Demonstration
 
 ```{r example, eval = FALSE}
 library(slobr)
@@ -47,17 +52,15 @@ slobr::run_app("demo")
 ```
 
 ## Contribution
-
 Please report any [issues](https://github.com/poissonconsulting/slobr/issues).
 
 [Pull requests](https://github.com/poissonconsulting/slobr/pulls) are always welcome.
 
-Please note that the 'slobr' project is released with a [Contributor Code of Conduct](CODE_OF_CONDUCT.md). 
-By contributing to this project, you agree to abide by its terms.
+Please note that this project is released with a [Contributor Code of Conduct](https://github.com/poissonconsulting/pkgtemplate/blob/master/CODE_OF_CONDUCT.md).
+By contributing, you agree to abide by its terms.
 
 ## Creditation
 
 - [blob](https://github.com/tidyverse/blob)
 - [flobr](https://github.com/poissonconsulting/flobr)
 - [dbflobr](https://github.com/poissonconsulting/dbflobr)
-

@@ -4,13 +4,17 @@ db_connect <- function(path){
 }
 
 table_names <- function(conn){
-  if(is.null(conn)) return(NULL)
+  tables <- table_names_all(conn)
   reserved <- c("readwritesqlite_log",
                 "readwritesqlite_meta",
                 "readwritesqlite_init")
-  tables <- DBI::dbListTables(conn)
   tables <- tables[!to_upper(tables) %in% to_upper(reserved)]
   sort(tables)
+}
+
+table_names_all <- function(conn){
+  if(is.null(conn)) return(NULL)
+  DBI::dbListTables(conn)
 }
 
 column_names <- function(table_name, conn) {
@@ -50,7 +54,7 @@ is_column_blob <- function(column_name, table_name, conn) {
 }
 
 sfc_columns <- function(table_name, conn){
-  has_meta <- "readwritesqlite_meta" %in% table_names(conn)
+  has_meta <- "readwritesqlite_meta" %in% table_names_all(conn)
   if(isTRUE(has_meta)){
     return({
       meta <- table_read("readwritesqlite_meta", conn)

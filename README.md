@@ -15,8 +15,6 @@ status](https://ci.appveyor.com/api/projects/status/github/poissonconsulting/slo
 coverage](https://codecov.io/gh/poissonconsulting/slobr/branch/master/graph/badge.svg)](https://codecov.io/gh/poissonconsulting/slobr?branch=master)
 [![License:
 MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT)
-[![Tinyverse
-status](https://tinyverse.netlify.com/badge/slobr)](https://CRAN.R-project.org/package=slobr)
 [![CRAN
 status](https://www.r-pkg.org/badges/version/slobr)](https://cran.r-project.org/package=slobr)
 <!-- ![CRAN downloads](http://cranlogs.r-pkg.org/badges/slobr) -->
@@ -31,8 +29,6 @@ To install the latest development version from
 [GitHub](https://github.com/poissonconsulting/slobr)
 
     # install.packages("remotes")
-    remotes::install_github("poissonconsulting/flobr")
-    remotes::install_github("poissonconsulting/dbflobr")
     remotes::install_github("poissonconsulting/slobr")
 
 To install the latest development version from the Poisson
@@ -47,7 +43,27 @@ To install the latest development version from the Poisson
 library(slobr)
 # to run with a demo database
 slobr::run_app("demo")
+
+# to run with a local database, provide a SQLite Connection
+dbname <- "/path/to/db.sqlite"
+conn <- DBI::dbConnect(RSQLite::SQLite(), dbname = dbname)
+slobr::run_app(conn)
 ```
+
+## App Use
+
+The SQLite Connection provided will be modified by the app. If you want
+to test the functionality first, we suggest using the demo db provided
+or create a copy of your database.
+
+Write files to a BLOB column within a table one cell/file at a time. To
+create a new BLOB column see the ‘other options’ link for more buttons.
+
+Read files from individual cells, entire columns or entire tables. These
+will be provided to you in a nested zipped directory
+(e.g. ‘table/column/file’).
+
+Look for the question mark icon to get more instructions within the app.
 
 ## Contribution
 

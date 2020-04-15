@@ -22,9 +22,6 @@ Suggests:
     testthat (>= 2.1.0),
     covr,
     readwritesqlite
-Remotes:
-    poissonconsulting/dbflobr,
-    poissonconsulting/flobr
 URL: https://github.com/poissonconsulting/slobr
 BugReports: https://github.com/poissonconsulting/slobr/issues
 RoxygenNote: 7.1.0

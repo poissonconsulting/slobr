@@ -19,11 +19,6 @@ mod_readwrite_ui <- function(id){
     useShinyjs(),
     sidebarLayout(
       sidebarPanel(
-        fileInput(ns("dbpath"), label = "Select database",
-                  accept = c("sqlite", "db")) %>%
-          info_tooltip("Must be a SQLite database"),
-        shinyjs::hidden(div(id = ns("div_dbhelp"), 
-                            helpText("This is not a SQLite database"))),
         shinyjs::hidden(
           div(id = ns("div_input"),
               uiOutput(ns("ui_table_name")),
@@ -86,12 +81,11 @@ mod_readwrite_server <- function(input, output, session){
   options(shiny.maxRequestSize = 3000*1024^2)
   ns <- session$ns 
   
-  path <- getShinyOption("path")
+  conn <- getShinyOption("conn")
   
-  rv <- reactiveValues(conn = db_connect(path),
-                       tbnames = table_names(db_connect(path)),
-                       table = table_read(table_names(db_connect(path))[1], 
-                                          db_connect(path)))
+  rv <- reactiveValues(conn = conn,
+                       tbnames = table_names(conn),
+                       table = table_read(table_names(conn)[1], conn))
   
   observe({
     if(!is.null(rv$table)){
@@ -104,22 +98,6 @@ mod_readwrite_server <- function(input, output, session){
   })
   
   observe({
-    if(is.null(rv$table) && !is.null(input$dbpath)){
-      shinyjs::show("div_dbhelp")
-    } else {
-      shinyjs::hide("div_dbhelp")
-    }
-  })
-  
-  observe({
-    if(is.null(input$file$datapath)){
-      shinyjs::disable("write")
-    } else {
-      shinyjs::enable("write")
-    }
-  })
-  
-  observe({
     req(input$table_name)
     if(check_column_name(input$add_column_name, 
                           input$table_name, rv$conn)){
@@ -127,20 +105,6 @@ mod_readwrite_server <- function(input, output, session){
     } else {
       shinyjs::disable("add_column")
     }
-  })
-  
-  observeEvent(input$dbpath, {
-    path <- input$dbpath$datapath
-    if(!check_db_extension(path)){
-      rv$table <- NULL
-      return()
-    }
-    conn <- db_connect(path)
-    print(path)
-    tbnames <- table_names(conn)
-    rv$conn <- conn
-    rv$tbnames <- tbnames
-    rv$table <- table_read(tbnames[1], conn)
   })
   
   observeEvent(input$table_name, {
@@ -288,7 +252,6 @@ mod_readwrite_server <- function(input, output, session){
   
   session$onSessionEnded(function() {
     conn <- isolate(rv$conn)
-    print(table_read("BeachSection", conn))
     DBI::dbDisconnect(conn)
   })
   

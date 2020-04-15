@@ -9,6 +9,8 @@ to_upper <- function(x) {
   x
 }
 
+title <- function(x) h3(x, style = "text-align: left; border-bottom: 1px solid #494949; font-size: 16px; margin: 10px;")
+
 is_try_error <- function(x) inherits(x, "try-error")
 
 rm_null <- function(x) x[lengths(x) != 0]

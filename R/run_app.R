@@ -1,17 +1,18 @@
 #' Run the Shiny Application
 #'
-#' @param path A path to SQLite database, or "demo" to load demo database, or NULL 
-#' to load the app without a database.
+#' @param conn A [SQLiteConnection-class] to a database or 'demo' to open with slobr demo database.
 #' @export
-#' @importFrom shiny runApp
-run_app <- function(path = NULL) {
+run_app <- function(conn = "demo") {
   
-  checkor(check_string(path), check_null(path))
+  checkor(check_sqlite_connection(conn),
+          chk::check_values(conn, c("demo", "demo", "demo")))
   
-  if(isTRUE(path == "demo"))
-    path <- system.file("extdata", "demo_db.sqlite", package = "slobr")
-
-  shinyOptions(path = path)
+  if(is.character(conn)){
+    if(conn == "demo")
+      conn <- db_connect(system.file("extdata", "demo_db.sqlite", package = "slobr"))
+  }
+ 
+  shinyOptions(conn = conn)
   
   shiny::runApp(system.file("app", package = "slobr"), launch.browser = TRUE)
 }

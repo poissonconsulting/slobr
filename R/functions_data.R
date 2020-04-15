@@ -1,11 +1,11 @@
 flob_ext <- function(x){
   class(x) <- c("flob", "blob")
-  y <- try(flobr::check_flob(x), silent = TRUE)
-  
-  if(is_err(y)){
+  y <- try(flobr::chk_flob(x), silent = TRUE)
+
+  if(is_try_error(y)){
     return("empty")
   }
-  flobr::flob_ext(y)
+  flobr::flob_ext(x)
 }
 
 flob_exts <- function(x){
@@ -63,7 +63,7 @@ get_flobs <- function(x, table_name, conn, by = "cell"){
     key <- x$key
     column_name <- x$column_name
     y <- try(dbflobr::read_flob(column_name, table_name, key, conn), silent = TRUE)
-    if(is_err(y))
+    if(is_try_error(y))
       return(NULL)
     y
   }) 

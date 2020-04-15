@@ -9,7 +9,7 @@ to_upper <- function(x) {
   x
 }
 
-is_err <- function(x) inherits(x, "try-error")
+is_try_error <- function(x) inherits(x, "try-error")
 
 rm_null <- function(x) x[lengths(x) != 0]
 

@@ -136,6 +136,7 @@ mod_readwrite_server <- function(input, output, session){
       return()
     }
     conn <- db_connect(path)
+    print(path)
     tbnames <- table_names(conn)
     rv$conn <- conn
     rv$tbnames <- tbnames
@@ -263,7 +264,7 @@ mod_readwrite_server <- function(input, output, session){
     path <- input$file$datapath
     name <- rm_ext(input$file$name)
     tmp <- send_flob(x, input$table_name, rv$conn, path, name)
-    if(isTRUE(tmp)){
+    if(!is_try_error(tmp)){
       rv$table <- table_read(input$table_name, rv$conn)
       reset('file')
       removeModal()
@@ -283,6 +284,12 @@ mod_readwrite_server <- function(input, output, session){
     rv$table <- table_read(input$table_name, rv$conn)
     reset('add_column_name')
     removeModal()
+  })
+  
+  session$onSessionEnded(function() {
+    conn <- isolate(rv$conn)
+    print(table_read("BeachSection", conn))
+    DBI::dbDisconnect(conn)
   })
   
 }

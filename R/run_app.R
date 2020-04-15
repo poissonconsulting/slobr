@@ -4,7 +4,7 @@
 #' @export
 run_app <- function(conn = "demo") {
   
-  checkor(check_sqlite_connection(conn),
+  chk::chkor(check_sqlite_connection(conn),
           chk::check_values(conn, c("demo", "demo", "demo")))
   
   if(is.character(conn)){

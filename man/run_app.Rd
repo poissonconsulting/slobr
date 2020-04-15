@@ -4,11 +4,10 @@
 \alias{run_app}
 \title{Run the Shiny Application}
 \usage{
-run_app(path = NULL)
+run_app(conn = "demo")
 }
 \arguments{
-\item{path}{A path to SQLite database, or "demo" to load demo database, or NULL
-to load the app without a database.}
+\item{conn}{A \linkS4class{SQLiteConnection} to a database or 'demo' to open with slobr demo database.}
 }
 \description{
 Run the Shiny Application

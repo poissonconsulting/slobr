@@ -1,4 +1,3 @@
-#' @import shiny
 app_ui <- function() {
   tagList(
     css_navbar(text_selected_color = "#5bc0de"),

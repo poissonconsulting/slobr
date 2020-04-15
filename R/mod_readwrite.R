@@ -11,7 +11,6 @@
 #' @rdname mod_readwrite
 #'
 #' @keywords internal
-#' @importFrom shiny NS tagList 
 mod_readwrite_ui <- function(id){
   ns <- NS(id)
   tagList(

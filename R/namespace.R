@@ -1,4 +1,5 @@
-#' @import checkr glue RSQLite shiny bsplus 
+#' @import shiny glue RSQLite bsplus 
 #' @importFrom shinyjs reset useShinyjs
 #' @importFrom utils zip
+#' @rawNamespace import(chk, except = p)
 NULL

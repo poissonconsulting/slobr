@@ -10,7 +10,7 @@ Imports:
     DBI,
     RSQLite,
     glue,
-    checkr,
+    chk,
     flobr,
     dbflobr,
     DT,
@@ -26,7 +26,7 @@ Remotes:
     poissonconsulting/flobr
 URL: https://github.com/poissonconsulting/slobr
 BugReports: https://github.com/poissonconsulting/slobr/issues
-RoxygenNote: 6.1.1
+RoxygenNote: 7.1.0
 Roxygen: list(markdown = TRUE)
 Encoding: UTF-8
 LazyData: true

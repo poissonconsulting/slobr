@@ -21,8 +21,6 @@ test_that("shiny functions work", {
   expect_identical(x, "<i class=\"fa fa-file-pdf-o\"></i> pdf")
   expect_identical(ext_icon("pdf"), "file-pdf-o")
   
-  x <- info_modal(label_container("a"), "yup")
-  expect_is(x, "shiny.tag")
   x <- info_tooltip(label_container("a"), "yup")
   expect_is(x, "shiny.tag")
   

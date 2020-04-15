@@ -39,15 +39,6 @@ ext_icon <- function(ext){
   "file-o"
 }
 
-info_modal <- function(input, modal_id){
-  input %>%
-    shinyInput_label_embed(
-      shiny_iconlink() %>%
-        bs_attach_modal(
-          modal_id
-        ))
-}
-
 info_tooltip <- function(input, x){
   input %>%
     shinyInput_label_embed(

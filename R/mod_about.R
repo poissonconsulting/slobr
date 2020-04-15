@@ -26,8 +26,7 @@ mod_about_ui <- function(id){
            actionLink(ns('info_citation'), "Citation info"),
            shinyjs::hidden(div(id = ns("div_citation"),
                                h6(HTML(paste("To cite package 'slobr' in publications use:<br><br>
-                                    Seb Dalgarno (2018). slobr: An app to read and write files to SQLite databases.
-                                    https://poissonconsulting.shinyapps.io/ypr/<br><br>
+                                    Seb Dalgarno (2020). slobr: An app to read and write files to SQLite databases.<br><br>
                                     "
                                ))))),
            hr(),

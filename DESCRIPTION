@@ -16,7 +16,8 @@ Imports:
     DT,
     bsplus,
     shinyjs,
-    shinycssloaders
+    shinycssloaders,
+    shinyhelper
 Suggests: 
     testthat (>= 2.1.0),
     covr,

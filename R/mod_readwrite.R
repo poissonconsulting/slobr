@@ -48,14 +48,10 @@ mod_readwrite_ui <- function(id){
                                           "table", "success") 
                 ))))),
       mainPanel(
-        bs_modal(ns("modal_info"),
-                 title = "How to use this table",
-                 body = instructions,
-                 footer = bs_modal_closebutton("Got it")),
         shinyjs::hidden(
           div(id = ns("div_output"),
-            label_container("Select cell(s) to read/write/delete file(s)") %>%
-              info_modal(ns("modal_info")),
+            tags$label("Select cell(s) to read/write/delete file(s)") %>%
+              shinyhelper::helper(content = "read_write", colour = "#377bb5"),
             wellPanel(style = "overflow-y:scroll; max-height: 600px",
                       shinycssloaders::withSpinner(DT::DTOutput(ns("table"))))
           )

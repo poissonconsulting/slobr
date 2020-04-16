@@ -54,7 +54,7 @@ slobr::run_slobr(conn)
 
 The SQLite Connection provided will be modified by the app. If you want
 to test the functionality first, we suggest using the demo db provided
-or create a copy of your database.
+or create a copy of your own database.
 
 Write files to a BLOB column within a table one cell/file at a time. To
 create a new BLOB column see the ‘other options’ link for more buttons.

@@ -7,7 +7,7 @@ test_that("data functions work", {
                     int = c(1L, 2L, 2L),
                     stringsAsFactors = FALSE)
   
-  readwritesqlite::rws_write(df2, x_name = "Table1", conn = conn, exists = FALSE, replace = TRUE)
+  DBI::dbWriteTable(conn, "Table1", df2)
 
   flob2 <- flobr::flob("~/Code/slobr/slobr/inst/extdata/df.csv")
   flob3 <- flobr::flob("~/Code/slobr/slobr/inst/extdata/file.jpg", name = "profile")

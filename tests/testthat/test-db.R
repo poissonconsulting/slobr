@@ -13,10 +13,9 @@ test_that("db functions work", {
                     int = c(1L, 2L, 2L),
                     stringsAsFactors = FALSE)
   
-  readwritesqlite::rws_write(df2, x_name = "Table1", conn = conn, exists = FALSE, replace = TRUE)
-  readwritesqlite::rws_write(df, x_name = "Table2", conn = conn, exists = FALSE, replace = TRUE)
-  readwritesqlite::rws_write(readwritesqlite::rws_data, x_name = "RwsData", conn = conn, exists = FALSE, replace = TRUE)
-  
+  DBI::dbWriteTable(conn, "Table1", df2)
+  DBI::dbWriteTable(conn, "Table2", df)
+
   write.csv(data.frame(x = 1), "~/Code/slobr/slobr/inst/extdata/df.csv")
   flob2 <- flobr::flob("~/Code/slobr/slobr/inst/extdata/df.csv")
   flob3 <- flobr::flob("~/Code/slobr/slobr/inst/extdata/file.jpg", name = "profile")
@@ -41,11 +40,8 @@ test_that("db functions work", {
                       conn = conn, exists = TRUE)
   
   x <- table_names_all(conn)
-  expect_identical(x, c("RwsData", "Table1", "Table2",
-                        "readwritesqlite_init",
-                        "readwritesqlite_log",
-                        "readwritesqlite_meta"))
-  expect_identical(table_names(conn), c("RwsData", "Table1", "Table2"))
+  expect_identical(x, c("Table1", "Table2"))
+  expect_identical(table_names(conn), c("Table1", "Table2"))
   
   x <- column_names("Table1", conn)
   expect_identical(x, c("char", "int", "flob", "flob2"))
@@ -65,6 +61,7 @@ test_that("db functions work", {
   expect_identical(blob_columns("Table1", conn), c(3L, 4L))
   
   # check sfc column
+  conn <- DBI::dbConnect(RSQLite::SQLite(), system.file("inst/extdata/demo_db.sqlite", package = "slobr"))
   expect_identical(sfc_columns("RwsData", conn), "GEOMETRY")
   
 })

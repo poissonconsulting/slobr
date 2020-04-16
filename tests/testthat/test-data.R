@@ -61,7 +61,7 @@ test_that("data functions work", {
   
   expect_is(flobs[[1]], c("flob", "blob"))
   names(flob) <- "flob"
-  expect_identical(flobs[[1]]$flob, flob2$`/Users/sebastiandalgarno/Code/slobr/slobr/inst/extdata/df.csv`)
+  expect_identical(flobs[[1]][[1]], flob2[[1]])
   
   x <- paste(file_name(mat, "Table1", conn, by = "cell"))
   expect_identical("flobr.pdf", x)

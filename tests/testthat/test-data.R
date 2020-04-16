@@ -31,9 +31,9 @@ test_that("data functions work", {
                                        stringsAsFactors = FALSE), 
                       conn = conn, exists = TRUE)
   
-  expect_identical(flob_ext(flob), "pdf")
-  expect_identical(flob_ext("nope"), "empty")
-  expect_identical(flob_exts(c(flob, flob)), c("pdf", "pdf"))
+  # expect_identical(flob_ext(flob), "pdf")
+  # expect_identical(flob_ext("nope"), "empty")
+  # expect_identical(flob_exts(c(flob, flob)), c("pdf", "pdf"))
   
   mat <- matrix(c(3, 2), ncol = 2, byrow = FALSE)
   mat2 <- matrix(c(2:3, rep(2, 2)), ncol = 2, byrow = FALSE)

@@ -1,3 +1,3 @@
 slobr_addin <- function() {
-  slobr::run_app()
+  slobr::run_slobr()
 }

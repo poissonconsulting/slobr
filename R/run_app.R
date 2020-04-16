@@ -2,7 +2,7 @@
 #'
 #' @param conn A [SQLiteConnection-class] to a database or 'demo' to open with slobr demo database.
 #' @export
-run_app <- function(conn = "demo") {
+run_slobr <- function(conn = "demo") {
   
   chk::chkor(check_sqlite_connection(conn),
           chk::check_values(conn, c("demo", "demo", "demo")))

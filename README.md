@@ -42,12 +42,12 @@ To install the latest development version from the Poisson
 ``` r
 library(slobr)
 # to run with a demo database
-slobr::run_app("demo")
+slobr::run_slobr("demo")
 
 # to run with a local database, provide a SQLite Connection
 dbname <- "/path/to/db.sqlite"
 conn <- DBI::dbConnect(RSQLite::SQLite(), dbname = dbname)
-slobr::run_app(conn)
+slobr::run_slobr(conn)
 ```
 
 ## App Use

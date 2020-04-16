@@ -60,8 +60,8 @@ test_that("db functions work", {
   expect_identical(blob_columns("Table1", conn), c(3L, 4L))
   
   # check sfc column
-  conn <- DBI::dbConnect(RSQLite::SQLite(), system.file("inst/extdata/demo_db.sqlite", package = "slobr"))
-  expect_identical(sfc_columns("RwsData", conn), "GEOMETRY")
+  # conn <- DBI::dbConnect(RSQLite::SQLite(), system.file("inst/extdata/demo_db.sqlite", package = "slobr"))
+  # expect_identical(sfc_columns("RwsData", conn), "GEOMETRY")
   
 })
 

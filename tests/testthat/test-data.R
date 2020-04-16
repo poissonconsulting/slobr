@@ -1,5 +1,5 @@
 test_that("data functions work", {
-  flob <- flobr::flob(system.file("extdata/df.csv", package = "slobr"))
+  flob <- flobr::flob_obj
   conn <- DBI::dbConnect(RSQLite::SQLite(), ":memory:")
   teardown(DBI::dbDisconnect(conn))
   
@@ -13,7 +13,7 @@ test_that("data functions work", {
   flob3 <- flobr::flob(system.file("extdata/file.jpg", package = "slobr"), name = "profile")
   flob4 <- flobr::flob(system.file("extdata/test.xlsx", package = "slobr"))
   
-  dbflobr::write_flob(flobr::flob_obj, "flob", "Table1", 
+  dbflobr::write_flob(flob, "flob", "Table1", 
                       key = data.frame(int = 2L, char = "c", 
                                        stringsAsFactors = FALSE), 
                       conn = conn, exists = FALSE)
@@ -31,9 +31,9 @@ test_that("data functions work", {
                                        stringsAsFactors = FALSE), 
                       conn = conn, exists = TRUE)
   
-  expect_identical(flob_ext(flob), "csv")
+  expect_identical(flob_ext(flob), "pdf")
   expect_identical(flob_ext("nope"), "empty")
-  expect_identical(flob_exts(c(flob, flob)), c("csv", "csv"))
+  expect_identical(flob_exts(c(flob, flob)), c("pdf", "pdf"))
   
   mat <- matrix(c(3, 2), ncol = 2, byrow = FALSE)
   mat2 <- matrix(c(2:3, rep(2, 2)), ncol = 2, byrow = FALSE)
@@ -61,7 +61,7 @@ test_that("data functions work", {
   
   expect_is(flobs[[1]], c("flob", "blob"))
   names(flob) <- "flob"
-  expect_identical(flobs[[1]], flob)
+  expect_identical(flobs[[1]]$flob, flob2$`/Users/sebastiandalgarno/Code/slobr/slobr/inst/extdata/df.csv`)
   
   x <- paste(file_name(mat, "Table1", conn, by = "cell"))
   expect_identical("flobr.pdf", x)

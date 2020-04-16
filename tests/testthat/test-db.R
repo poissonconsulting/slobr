@@ -16,10 +16,9 @@ test_that("db functions work", {
   DBI::dbWriteTable(conn, "Table1", df2)
   DBI::dbWriteTable(conn, "Table2", df)
 
-  write.csv(data.frame(x = 1), "~/Code/slobr/slobr/inst/extdata/df.csv")
-  flob2 <- flobr::flob("~/Code/slobr/slobr/inst/extdata/df.csv")
-  flob3 <- flobr::flob("~/Code/slobr/slobr/inst/extdata/file.jpg", name = "profile")
-  flob4 <- flobr::flob("~/Code/slobr/slobr/inst/extdata/test.xlsx")
+  flob2 <- flobr::flob(system.file("extdata/df.csv", package = "slobr"))
+  flob3 <- flobr::flob(system.file("extdata/file.jpg", package = "slobr"), name = "profile")
+  flob4 <- flobr::flob(system.file("extdata/test.xlsx", package = "slobr"))
   
   dbflobr::write_flob(flobr::flob_obj, "flob", "Table1", 
                       key = data.frame(int = 2L, char = "c", 

@@ -1,6 +1,35 @@
 test_that("data functions work", {
   flob <- flobr::flob(system.file("extdata/df.csv", package = "slobr"))
-  conn <- db_connect(system.file("extdata", "demo_db.sqlite", package = "slobr")) 
+  conn <- DBI::dbConnect(RSQLite::SQLite(), ":memory:")
+  teardown(DBI::dbDisconnect(conn))
+  
+  df2 <- data.frame(char = c("a", "b", "c"),
+                    int = c(1L, 2L, 2L),
+                    stringsAsFactors = FALSE)
+  
+  readwritesqlite::rws_write(df2, x_name = "Table1", conn = conn, exists = FALSE, replace = TRUE)
+
+  flob2 <- flobr::flob("~/Code/slobr/slobr/inst/extdata/df.csv")
+  flob3 <- flobr::flob("~/Code/slobr/slobr/inst/extdata/file.jpg", name = "profile")
+  flob4 <- flobr::flob("~/Code/slobr/slobr/inst/extdata/test.xlsx")
+  
+  dbflobr::write_flob(flobr::flob_obj, "flob", "Table1", 
+                      key = data.frame(int = 2L, char = "c", 
+                                       stringsAsFactors = FALSE), 
+                      conn = conn, exists = FALSE)
+  
+  dbflobr::write_flob(flob2, "flob", "Table1", 
+                      key = data.frame(int = 2L, char = "b", 
+                                       stringsAsFactors = FALSE), 
+                      conn = conn, exists = TRUE)
+  
+  dbflobr::write_flob(flob2, "flob2", "Table1", key = data.frame(int = 1L), 
+                      conn = conn, exists = FALSE)
+  
+  dbflobr::write_flob(flob3, "flob2", "Table1", 
+                      key = data.frame(int = 2L, char = "c", 
+                                       stringsAsFactors = FALSE), 
+                      conn = conn, exists = TRUE)
   
   expect_identical(flob_ext(flob), "csv")
   expect_identical(flob_ext("nope"), "empty")
@@ -40,6 +69,30 @@ test_that("data functions work", {
   expect_identical("Table1.zip", x)
   x <- paste(file_name(mat2, "Table1", conn, by = "cell"))
   expect_identical("Table1.zip", x)
+  
+  cells <- matrix(data = c(2, 3), nrow = 1, ncol = 2)
+  x <- send_flob(cells, table_name = "Table1", conn = conn, system.file("extdata/df.csv", package = "slobr"), name = "df")
+  expect_is(x, "flob")
+  cells2 <- matrix(data = c(2, 4), nrow = 1, ncol = 2)
+  x <- send_flob(cells2, table_name = "Table1", conn = conn, system.file("extdata/df.csv", package = "slobr"), name = "df")
+  expect_is(x, "try-error")
+  
+  y <- dbflobr::read_flob("flob2", "Table1", key[[1]]$key, conn)
+  expect_is(y, "flob")
+  
+  cells <- matrix(data = c(2, 2), nrow = 1, ncol = 2)
+  x <- delete_flob(cells, "Table1", conn, by = "cell")
+  expect_is(x[[1]], "flob")
+  expect_identical(sum(is.na(table_read("Table1", conn)$flob)), 2L)
+  
+  cells <- matrix(data = c(2, 3), nrow = 1, ncol = 2)
+  expect_identical(sum(!is.na(table_read("Table1", conn)$flob2)), 3L)
+  x <- delete_flob(cells, "Table1", conn, by = "column")
+  expect_true(all(is.na(table_read("Table1", conn)$flob2)))
+  
+  x <- add_column("new", table_name = "Table1", conn)
+  expect_true(x)
+  expect_true("new" %in% names(table_read("Table1", conn)))
   
 })
 

@@ -21,10 +21,13 @@ Imports:
 Suggests: 
     testthat (>= 2.1.0),
     covr,
-    readwritesqlite
+    readwritesqlite,
+    knitr, 
+    rmarkdown
 URL: https://github.com/poissonconsulting/slobr
 BugReports: https://github.com/poissonconsulting/slobr/issues
 RoxygenNote: 7.1.0
 Roxygen: list(markdown = TRUE)
 Encoding: UTF-8
 LazyData: true
+VignetteBuilder: knitr

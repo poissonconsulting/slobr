@@ -1,0 +1,75 @@
+---
+title: "Slobr Tutorial"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{slobr}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+
+```{r example, eval = FALSE}
+library(slobr)
+
+# For this tutorial we will use a demo database that is contained within the package
+slobr::run_slobr("demo")
+
+```
+
+
+The app will open in a browser window.
+
+## Adding flobs to a database
+
+1 - Under 'Table Selection', choose 'Table 1'
+
+```{r echo = FALSE, out.width = '50%'}
+knitr::include_graphics(paste0(getwd(), "/figures/tut-1.png"))
+```
+<br /><br />
+
+2 - Select the cell in the table that you would like to populate with a flob, then click 'write cell'
+
+```{r echo = FALSE, out.width = '110%'}
+knitr::include_graphics(paste0(getwd(), "/figures/tut-2.png"))
+```
+<br /><br />
+
+3 - Choose a file and once slobr has indicated that the upload is complete, click 'write'
+
+```{r echo = FALSE, out.width = '70%'}
+knitr::include_graphics(paste0(getwd(), "/figures/tut-3.png"))
+```
+
+
+## Adding a flob column to a database table
+
+In some cases, you may need to add a new column in which to store flobs. Take for example the 'RwsData' table, which does not yet have a flob column.
+
+1 - Click 'other options', then 'add column',
+
+```{r echo = FALSE, out.width = '40%'}
+knitr::include_graphics(paste0(getwd(), "/figures/tut-4.png"))
+```
+<br /><br />
+
+2 - Give the new column a name and click 'add column',
+
+```{r echo = FALSE, out.width = '65%'}
+knitr::include_graphics(paste0(getwd(), "/figures/tut-5.png"))
+```
+<br /><br />
+
+3 - You now have a flob column and can populate it as usual.
+
+```{r echo = FALSE, out.width = '120%'}
+knitr::include_graphics(paste0(getwd(), "/figures/tut-6.png"))
+```
+

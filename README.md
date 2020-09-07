@@ -7,17 +7,16 @@
 
 [![Lifecycle:
 experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://www.tidyverse.org/lifecycle/#experimental)
-[![Travis build
-status](https://travis-ci.org/poissonconsulting/slobr.svg?branch=master)](https://travis-ci.org/poissonconsulting/slobr)
-[![AppVeyor build
-status](https://ci.appveyor.com/api/projects/status/github/poissonconsulting/slobr?branch=master&svg=true)](https://ci.appveyor.com/project/poissonconsulting/slobr)
+[![R build
+status](https://github.com/poissonconsulting/slobr/workflows/R-CMD-check/badge.svg)](https://github.com/poissonconsulting/slobr/actions)
 [![Codecov test
 coverage](https://codecov.io/gh/poissonconsulting/slobr/branch/master/graph/badge.svg)](https://codecov.io/gh/poissonconsulting/slobr?branch=master)
 [![License:
 MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT)
 [![CRAN
 status](https://www.r-pkg.org/badges/version/slobr)](https://cran.r-project.org/package=slobr)
-<!-- ![CRAN downloads](http://cranlogs.r-pkg.org/badges/slobr) -->
+
+<!-- badges: end -->
 
 `slobr` is a Shiny app to read and write files to SQLite databases as
 [flobs](https://poissonconsulting.github.io/flobr/reference/flob.html).
@@ -73,9 +72,12 @@ Please report any
 [Pull requests](https://github.com/poissonconsulting/slobr/pulls) are
 always welcome.
 
-Please note that this project is released with a [Contributor Code of
-Conduct](https://github.com/poissonconsulting/pkgtemplate/blob/master/CODE_OF_CONDUCT.md).
-By contributing, you agree to abide by its terms.
+## Code of Conduct
+
+Please note that the slobr project is released with a [Contributor Code
+of
+Conduct](https://contributor-covenant.org/version/2/0/CODE_OF_CONDUCT.html).
+By contributing to this project, you agree to abide by its terms.
 
 ## Creditation
 

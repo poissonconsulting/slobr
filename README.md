@@ -30,12 +30,6 @@ To install the latest development version from
     # install.packages("remotes")
     remotes::install_github("poissonconsulting/slobr")
 
-To install the latest development version from the Poisson
-[drat](https://github.com/poissonconsulting/drat) repository.
-
-    drat::addRepo("poissonconsulting")
-    install.packages("slobr")
-
 ## Demonstration
 
 ``` r

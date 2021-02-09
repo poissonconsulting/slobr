@@ -6,7 +6,7 @@
 <!-- badges: start -->
 
 [![Lifecycle:
-experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://www.tidyverse.org/lifecycle/#experimental)
+experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
 [![R build
 status](https://github.com/poissonconsulting/slobr/workflows/R-CMD-check/badge.svg)](https://github.com/poissonconsulting/slobr/actions)
 [![Codecov test
@@ -75,6 +75,6 @@ By contributing to this project, you agree to abide by its terms.
 
 ## Creditation
 
-  - [blob](https://github.com/tidyverse/blob)
-  - [flobr](https://github.com/poissonconsulting/flobr)
-  - [dbflobr](https://github.com/poissonconsulting/dbflobr)
+-   [blob](https://github.com/tidyverse/blob)
+-   [flobr](https://github.com/poissonconsulting/flobr)
+-   [dbflobr](https://github.com/poissonconsulting/dbflobr)

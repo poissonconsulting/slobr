@@ -16,7 +16,7 @@ test_that("shiny functions work", {
   
   x <- cell_display("pdf")
   names(x) <- NULL
-  expect_identical(x, "<i class=\"fa fa-file-pdf-o\"></i> pdf")
+  expect_identical(x, "<i class=\"fa fa-file-pdf-o\" role=\"presentation\" aria-label=\"file-pdf-o icon\"></i> pdf")
   expect_identical(ext_icon("pdf"), "file-pdf-o")
   
   x <- info_tooltip(label_container("a"), "yup")

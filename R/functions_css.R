@@ -1,18 +1,25 @@
-css_add <- function(x){
+css_add <- function(x) {
   shiny::tags$head(shiny::tags$style(shiny::HTML(x)))
 }
 
-css_hide_errors <- function(){
-  css_add(glue::glue("
+css_hide_errors <- function() {
+  css_add(glue::glue(
+    "
 .shiny-output-error {{ visibility: hidden; }}
 .shiny-output-error:before {{ visibility: hidden;}}
-"))
+"
+  ))
 }
 
-css_navbar <- function(text_color = "#E0E0E0", text_selected_color = "#37CBA2",
-                       text_size = "15px",
-                       background_color = "#010101", float = "right"){
-  css_add(glue::glue("
+css_navbar <- function(
+  text_color = "#E0E0E0",
+  text_selected_color = "#37CBA2",
+  text_size = "15px",
+  background_color = "#010101",
+  float = "right"
+) {
+  css_add(glue::glue(
+    "
 .navbar .navbar-nav {{float: {float};
 }}
 
@@ -111,6 +118,6 @@ css_navbar <- function(text_color = "#E0E0E0", text_selected_color = "#37CBA2",
   color: {text_color};
 }}
 
-"))
+"
+  ))
 }
-

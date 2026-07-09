@@ -1,18 +1,24 @@
-db_connect <- function(path){
-  if(is.null(path)) return(NULL)
+db_connect <- function(path) {
+  if (is.null(path)) {
+    return(NULL)
+  }
   readwritesqlite::rws_connect(path)
 }
 
-table_names_all <- function(conn){
-  if(is.null(conn)) return(NULL)
+table_names_all <- function(conn) {
+  if (is.null(conn)) {
+    return(NULL)
+  }
   DBI::dbListTables(conn)
 }
 
-table_names <- function(conn){
+table_names <- function(conn) {
   tables <- table_names_all(conn)
-  reserved <- c("readwritesqlite_log",
-                "readwritesqlite_meta",
-                "readwritesqlite_init")
+  reserved <- c(
+    "readwritesqlite_log",
+    "readwritesqlite_meta",
+    "readwritesqlite_init"
+  )
   tables <- tables[!to_upper(tables) %in% to_upper(reserved)]
   sort(tables)
 }
@@ -21,8 +27,10 @@ column_names <- function(table_name, conn) {
   DBI::dbListFields(conn, table_name)
 }
 
-table_read <- function(table_name, conn){
-  if(is.null(conn)) return(NULL)
+table_read <- function(table_name, conn) {
+  if (is.null(conn)) {
+    return(NULL)
+  }
   DBI::dbReadTable(conn, name = table_name)
 }
 
@@ -53,27 +61,27 @@ is_column_blob <- function(column_name, table_name, conn) {
   toupper(table_column_type(column_name, table_name, conn)) == "BLOB"
 }
 
-sfc_columns <- function(table_name, conn){
+sfc_columns <- function(table_name, conn) {
   has_meta <- "readwritesqlite_meta" %in% table_names_all(conn)
-  if(isTRUE(has_meta)){
+  if (isTRUE(has_meta)) {
     return({
       meta <- table_read("readwritesqlite_meta", conn)
-      meta <- meta[meta$TableMeta == toupper(table_name),]
+      meta <- meta[meta$TableMeta == toupper(table_name), ]
       meta$ColumnMeta[grepl("^proj:", meta$MetaMeta)]
     })
   }
   NULL
 }
 
-blob_columns <- function(table_name, conn){
+blob_columns <- function(table_name, conn) {
   cols <- column_names(table_name, conn)
   sfc_cols <- sfc_columns(table_name, conn)
-  which(sapply(cols, USE.NAMES = FALSE, function(x){
+  which(sapply(cols, USE.NAMES = FALSE, function(x) {
     is_column_blob(x, table_name, conn) && !(toupper(x) %in% sfc_cols)
   }))
 }
 
-column_exists <- function(x, table_name, conn){
+column_exists <- function(x, table_name, conn) {
   column_names <- column_names(table_name, conn)
   toupper(x) %in% toupper(column_names)
 }

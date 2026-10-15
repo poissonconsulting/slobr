@@ -1,33 +1,43 @@
 Package: slobr
 Title: An app to read and write files to SQLite databases
 Version: 0.0.0.9000
-Authors@R: person("Sebastian", "Dalgarno", role = c("aut", "cre"), email = "seb@poissonconsulting.ca", comment = c(ORCID = "0000-0002-3658-4517"))
-Description: A package to run a Shiny app to read and write files to a SQLite database as flobs. A flob is a special type of BLOB type of BLOB that includes the file extension type.
-Depends: R (>= 3.5.0)
+Authors@R: 
+    person("Sebastian", "Dalgarno", , "seb@poissonconsulting.ca", role = c("aut", "cre"),
+           comment = c(ORCID = "0000-0002-3658-4517"))
+Description: A package to run a Shiny app to read and write files to a
+    SQLite database as flobs. A flob is a special type of BLOB type of
+    BLOB that includes the file extension type.
 License: MIT + file LICENSE
-Imports: 
-    shiny,
-    DBI,
-    RSQLite,
-    glue,
-    chk,
-    flobr,
-    dbflobr,
-    DT,
-    bsplus,
-    shinyjs,
-    shinycssloaders,
-    shinyhelper
-Suggests: 
-    testthat (>= 2.1.0),
-    covr,
-    readwritesqlite,
-    knitr, 
-    rmarkdown
 URL: https://github.com/poissonconsulting/slobr
 BugReports: https://github.com/poissonconsulting/slobr/issues
-RoxygenNote: 7.1.0
-Roxygen: list(markdown = TRUE)
+Depends: 
+    R (>= 3.5.0)
+Imports: 
+    bsplus,
+    chk,
+    dbflobr,
+    DBI,
+    DT,
+    flobr,
+    glue,
+    RSQLite,
+    shiny,
+    shinycssloaders,
+    shinyhelper,
+    shinyjs
+Suggests: 
+    covr,
+    knitr,
+    readwritesqlite,
+    rmarkdown,
+    testthat (>= 2.1.0)
+VignetteBuilder: 
+    knitr
+Remotes:
+    poissonconsulting/dbflobr,
+    poissonconsulting/flobr,
+    poissonconsulting/readwritesqlite
 Encoding: UTF-8
 LazyData: true
-VignetteBuilder: knitr
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.1.0

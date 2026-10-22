@@ -16,7 +16,10 @@ test_that("shiny functions work", {
   
   x <- cell_display("pdf")
   names(x) <- NULL
-  expect_identical(x, "<i class=\"fa fa-file-pdf-o\" role=\"presentation\" aria-label=\"file-pdf-o icon\"></i> pdf")
+  # fontawesome changes the class prefix between versions ("fa" vs "far"), so
+  # check the icon and label rather than the exact HTML.
+  expect_match(x, "fa-file-pdf-o", fixed = TRUE)
+  expect_match(x, "</i> pdf$")
   expect_identical(ext_icon("pdf"), "file-pdf-o")
   
   x <- info_tooltip(label_container("a"), "yup")
